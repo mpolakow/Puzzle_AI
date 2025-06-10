@@ -201,6 +201,7 @@ const combinationRecipes = {
                         const existingHotspots = gameArea.querySelectorAll('.hotspot');
                         existingHotspots.forEach(hs => hs.remove());
                         restartButton.style.display = 'inline-block';
+                        if (combineButton) combineButton.style.display = 'none';
                     } else {
                         gameState.message = "There a werid ring shaped hole in the wall, I wonder where does it go.";
                     }
@@ -301,6 +302,7 @@ const combinationRecipes = {
 		                        const existingHotspots = gameArea.querySelectorAll('.hotspot');
 		                        existingHotspots.forEach(hs => hs.remove());
 		                        restartButton.style.display = 'inline-block';
+                                        if (combineButton) combineButton.style.display = 'none';
                                     }
                                 }, 2000); // 2-second delay
                                 break;
@@ -327,6 +329,7 @@ const combinationRecipes = {
 		                        const existingHotspots = gameArea.querySelectorAll('.hotspot');
 		                        existingHotspots.forEach(hs => hs.remove());
 		                        restartButton.style.display = 'inline-block';
+                                        if (combineButton) combineButton.style.display = 'none';
                                     }
                                 }, 2000); // 2-second delay
                                 break;
@@ -394,6 +397,7 @@ const combinationRecipes = {
             changeScene(gameState.currentScene, true);
             renderInventory();
             restartButton.style.display = 'none';
+            if (combineButton) combineButton.style.display = 'inline-block';
         }
 
         function changeScene(sceneId, isInitialLoad = false) {
@@ -510,6 +514,7 @@ const combinationRecipes = {
             messageArea.textContent = gameState.message;
             if (gameState.flags.exitDoorUnlocked || gameState.message.includes("Congratulations")) {
                  restartButton.style.display = 'inline-block';
+                 if (combineButton) combineButton.style.display = 'none';
             }
         }
         function renderInventory() {
