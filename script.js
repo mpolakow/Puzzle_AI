@@ -513,30 +513,64 @@ const combinationRecipes = {
             }
         }
         function renderInventory() {
+            console.log("renderInventory called. gameState.isCombining:", gameState.isCombining); // DEBUG
             inventoryList.innerHTML = '';
             if (gameState.inventory.length === 0) {
-                inventoryList.appendChild(document.createElement('li')).textContent = "(Empty)";
+                const li = document.createElement('li');
+                li.textContent = "(Empty)";
+                inventoryList.appendChild(li);
             } else {
                 gameState.inventory.forEach(item => {
-                    inventoryList.appendChild(document.createElement('li')).textContent = item;
+                    const li = document.createElement('li');
+                    li.textContent = item;
+                    // console.log("Processing item for inventory display:", item); // Optional: very verbose
+                    if (gameState.isCombining) {
+                        console.log("renderInventory: In 'isCombining' mode for item:", item); // DEBUG
+                        li.classList.add('selectable-item');
+                        if (gameState.selectedForCombination.includes(item)) {
+                            li.classList.add('selected-for-combination');
+                        }
+                        li.addEventListener('click', () => toggleItemSelectionForCombination(item));
+                        console.log("renderInventory: Added click listener for item:", item); // DEBUG
+                    }
+                    inventoryList.appendChild(li);
                 });
             }
         }
 
 function toggleItemSelectionForCombination(itemName) {
-    if (!gameState.isCombining) return; // Should not happen if event listeners are only added in combining mode
+    console.log("toggleItemSelectionForCombination called with item:", itemName); // DEBUG
+    if (!gameState.isCombining) {
+        console.log("toggleItemSelectionForCombination: Not in combining mode, exiting."); // DEBUG
+        return;
+    }
 
+    console.log("Before selection change, selectedForCombination:", JSON.stringify(gameState.selectedForCombination)); // DEBUG
     const index = gameState.selectedForCombination.indexOf(itemName);
     if (index > -1) {
-        gameState.selectedForCombination.splice(index, 1); // Deselect
+        gameState.selectedForCombination.splice(index, 1);
+        console.log("Item deselected:", itemName); // DEBUG
     } else {
-        // Optional: Add a limit to how many items can be selected, e.g., based on max ingredients in recipes
-        gameState.selectedForCombination.push(itemName); // Select
+        gameState.selectedForCombination.push(itemName);
+        console.log("Item selected:", itemName); // DEBUG
     }
-    renderInventory(); // Re-render to update visual selection
-    // Potentially update a message area to show selected items
+    console.log("After selection change, selectedForCombination:", JSON.stringify(gameState.selectedForCombination)); // DEBUG
+
+    // Update the visual state of the item in the list directly
+    const listItems = inventoryList.getElementsByTagName('li');
+    for (let li of listItems) {
+        if (li.textContent === itemName) {
+            if (gameState.selectedForCombination.includes(itemName)) {
+                li.classList.add('selected-for-combination');
+            } else {
+                li.classList.remove('selected-for-combination');
+            }
+            break; // Found the item, no need to continue loop
+        }
+    }
+
     gameState.message = `Selected for combination: ${gameState.selectedForCombination.join(', ') || 'None'}. Click 'Cancel Combination' to attempt.`;
-    renderMessage();
+    renderMessage(); // renderMessage is fine, it doesn't destroy inventory items
 }
         function addItemToInventory(item) {
             if (!gameState.inventory.includes(item)) gameState.inventory.push(item);
@@ -549,25 +583,29 @@ function toggleItemSelectionForCombination(itemName) {
         }
 
 function toggleCombinationMode() {
+    console.log("toggleCombinationMode called"); // DEBUG
     gameState.isCombining = !gameState.isCombining;
-    // const combineButton = document.getElementById('combineButton'); // Already declared globally
+    console.log("gameState.isCombining is now:", gameState.isCombining); // DEBUG
+    const combineButton = document.getElementById('combineButton');
 
-    if (gameState.isCombining) {
+    if (gameState.isCombining) { // Entering combination mode
         combineButton.textContent = 'Cancel Combination';
+        console.log("Combine button text set to: Cancel Combination");
         gameState.message = "Select items from your inventory to combine. Click an item to select or deselect it. Click 'Cancel Combination' again to attempt to combine selected items.";
-        gameState.selectedForCombination = []; // Clear previous selections
-    } else {
+        gameState.selectedForCombination = [];
+        renderMessage(); // Update message
+        renderInventory(); // Render inventory for selection
+    } else { // Exiting combination mode
         combineButton.textContent = 'Combine';
-        // Check if items were selected before cancelling, then attempt combination
+        console.log("Combine button text set to: Combine");
         if (gameState.selectedForCombination.length > 0) {
-            attemptCombination(); // We will define this function next
+            attemptCombination(); // This function handles its own messages and inventory rendering
         } else {
-             gameState.message = "Combination cancelled."; // Or restore original message
+             gameState.message = "Combination cancelled.";
+             renderMessage(); // Update message
+             renderInventory(); // Render inventory in normal state
         }
-        // gameState.selectedForCombination = []; // Clear selections
     }
-    renderMessage();
-    renderInventory(); // To update item appearance if needed
 }
 
 function attemptCombination() {
