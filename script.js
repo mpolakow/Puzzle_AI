@@ -4,6 +4,7 @@
         const messageArea = document.getElementById('messageArea');
         const inventoryList = document.getElementById('inventoryList');
         const restartButton = document.getElementById('restartButton');
+        const combineButton = document.getElementById('combineButton'); // Add this line
 
         // Game State
         let gameState = {};
@@ -76,6 +77,12 @@
                         id: "house_exit",
                         style: { left: "50%", top: "70%", width: "10%", height: "20%" },
                         objectId: "exit_house"
+                    },
+                    {
+                        id: "pickup_cloth",
+                        imageUrl: "https://ai.oldwisebear.com/Game1/cloth_item.png", // Needs a placeholder image
+                        style: { left: "10%", top: "70%", width: "10%", height: "10%" },
+                        objectId: "pickup_cloth"
                     }
                 ]
             },
@@ -99,6 +106,18 @@
                         imageUrl: "https://ai.oldwisebear.com/Game1/chest_key.png",
                         style: { left: "20%", top: "80%", width: "10%", height: "5%" },
                         objectId: "pick_upchest_chest_key"
+                    },
+                    {
+                        id: "pickup_oil",
+                        imageUrl: "https://ai.oldwisebear.com/Game1/oil_item.png", // Needs a placeholder image
+                        style: { left: "5%", top: "80%", width: "10%", height: "10%" },
+                        objectId: "pickup_oil"
+                    },
+                    {
+                        id: "dark_area_storage",
+                        // No imageUrl for dark area, it's an interaction spot
+                        style: { left: "60%", top: "30%", width: "20%", height: "30%" },
+                        objectId: "inspect_dark_area_storage"
                     }
                 ]
             },
@@ -136,6 +155,10 @@
                 ]
             }
         };
+
+const combinationRecipes = {
+    "torch": { "ingredients": ["stick", "cloth", "oil"], "result": "torch" }
+};
 
         // --- Interactive Object Definitions ---
         const interactiveObjects = {
@@ -186,10 +209,18 @@
             "inspect_rubble": {
                  handler: () => {
                     if (!gameState.flags.stoneCollected) {
-                        gameState.message = "You look through the rubble, but find nothing but stones. You decide to take one.";
+                        gameState.message = "You look through the rubble, find some stones and a sturdy-looking stick. You take one of each.";
                         addItemToInventory("Stone");
-                        gameState.flags.stoneCollected = true;
-                    } else {
+                        addItemToInventory("Stick"); // Add stick
+                        gameState.flags.stoneCollected = true; // Assuming this flag means "rubble searched"
+                        gameState.flags.stickCollected = true; // Add a new flag for the stick
+                    } else if (!gameState.flags.stickCollected) {
+                        // If stone was collected but not stick (e.g. if logic changes later)
+                        gameState.message = "Searching the rubble again, you find a sturdy-looking stick.";
+                        addItemToInventory("Stick");
+                        gameState.flags.stickCollected = true;
+                    }
+                    else {
                         gameState.message = "You've already looked through this. There is nothing else interesting here.";
                     }
                 }
@@ -300,8 +331,42 @@
                                 }, 2000); // 2-second delay
                                 break;
                         }                }
+            },
+            "pickup_cloth": {
+                handler: () => {
+                    if (!checkInventory("Cloth")) {
+                        gameState.message = "You find a piece of cloth that seems usable.";
+                        addItemToInventory("Cloth");
+                        gameState.flags.clothCollected = true; // Add flag
+                        // Remove hotspot after pickup by updating shouldDisplayHotspot
+                    } else {
+                        gameState.message = "You've already taken the cloth.";
+                    }
+                }
+            },
+            "pickup_oil": {
+                handler: () => {
+                    if (!checkInventory("Oil")) {
+                        gameState.message = "You find a small flask of oil.";
+                        addItemToInventory("Oil");
+                        gameState.flags.oilCollected = true; // Add flag
+                    } else {
+                        gameState.message = "You've already taken the oil.";
+                    }
+                }
+            },
+            "inspect_dark_area_storage": {
+                handler: () => {
+                    if (checkInventory("Torch")) {
+                        gameState.message = "You use the torch to light up the dark area. You see a small, almost invisible inscription on the wall! It reads: 'The path is revealed to those who persist.'";
+                        // Potentially remove torch if it's a one-time use for this puzzle
+                        // removeItemFromInventory("Torch");
+                        // gameState.flags.darkAreaInspected = true; // Flag to prevent re-inspection or change message
+                    } else {
+                        gameState.message = "It's too dark to see anything in this corner. If only you had a light source...";
+                    }
+                }
             }
-
         };
 
         // --- Core Game Logic ---
@@ -319,7 +384,12 @@
 		    rakeObtained: false,
 		    CultistAnnoyance: 0, // ADDED: To track mood
 		    CultistLeaderAnnoyance: 0, // ADDED: To track mood
+                    stickCollected: false,
+                    clothCollected: false,
+                    oilCollected: false,
                 },
+                isCombining: false,
+                selectedForCombination: [],
             };
             changeScene(gameState.currentScene, true);
             renderInventory();
@@ -424,9 +494,15 @@
 
         function shouldDisplayHotspot(objectId, hsData) {
             if (objectId === "pickup_red_flower" && gameState.flags.redFlowerTaken) return false;
-            if (objectId === "pickup_red_flower" && gameState.flags.redFlowerTaken) return false;
+            // if (objectId === "pickup_red_flower" && gameState.flags.redFlowerTaken) return false; // Duplicate line removed for clarity
             if (objectId === "inspect_rake" && gameState.flags.rakeObtained) return false;
             if (objectId === "pick_upchest_chest_key" && gameState.flags.keyObtained) return false;
+            if (objectId === "pickup_cloth" && gameState.flags.clothCollected) return false;
+            if (objectId === "pickup_oil" && gameState.flags.oilCollected) return false;
+            // For inspect_rubble, the existing stoneCollected flag (and potentially stickCollected) in its handler
+            // should determine if it continues to show or what message it gives.
+            // If the hotspot itself (gate_rubble) should disappear after full looting,
+            // we might need to adjust based on hsData.id, but the current objectId based logic is fine.
             return true;
         }
 
@@ -446,6 +522,22 @@
                 });
             }
         }
+
+function toggleItemSelectionForCombination(itemName) {
+    if (!gameState.isCombining) return; // Should not happen if event listeners are only added in combining mode
+
+    const index = gameState.selectedForCombination.indexOf(itemName);
+    if (index > -1) {
+        gameState.selectedForCombination.splice(index, 1); // Deselect
+    } else {
+        // Optional: Add a limit to how many items can be selected, e.g., based on max ingredients in recipes
+        gameState.selectedForCombination.push(itemName); // Select
+    }
+    renderInventory(); // Re-render to update visual selection
+    // Potentially update a message area to show selected items
+    gameState.message = `Selected for combination: ${gameState.selectedForCombination.join(', ') || 'None'}. Click 'Cancel Combination' to attempt.`;
+    renderMessage();
+}
         function addItemToInventory(item) {
             if (!gameState.inventory.includes(item)) gameState.inventory.push(item);
         }
@@ -456,8 +548,83 @@
             return gameState.inventory.includes(item);
         }
 
+function toggleCombinationMode() {
+    gameState.isCombining = !gameState.isCombining;
+    // const combineButton = document.getElementById('combineButton'); // Already declared globally
+
+    if (gameState.isCombining) {
+        combineButton.textContent = 'Cancel Combination';
+        gameState.message = "Select items from your inventory to combine. Click an item to select or deselect it. Click 'Cancel Combination' again to attempt to combine selected items.";
+        gameState.selectedForCombination = []; // Clear previous selections
+    } else {
+        combineButton.textContent = 'Combine';
+        // Check if items were selected before cancelling, then attempt combination
+        if (gameState.selectedForCombination.length > 0) {
+            attemptCombination(); // We will define this function next
+        } else {
+             gameState.message = "Combination cancelled."; // Or restore original message
+        }
+        // gameState.selectedForCombination = []; // Clear selections
+    }
+    renderMessage();
+    renderInventory(); // To update item appearance if needed
+}
+
+function attemptCombination() {
+    if (gameState.selectedForCombination.length === 0) {
+        gameState.message = "No items selected to combine.";
+        // Reset combination mode (done by toggleCombinationMode or manually if needed)
+        gameState.isCombining = false;
+        document.getElementById('combineButton').textContent = 'Combine';
+        renderMessage();
+        return;
+    }
+
+    let combinationMade = false;
+    for (const recipeName in combinationRecipes) {
+        const recipe = combinationRecipes[recipeName];
+        const ingredients = recipe.ingredients;
+        const result = recipe.result;
+
+        // Check if selected items match the ingredients list (order doesn't matter, count matters)
+        if (ingredients.length === gameState.selectedForCombination.length &&
+            ingredients.every(ing => gameState.selectedForCombination.includes(ing)) &&
+            gameState.selectedForCombination.every(selIng => ingredients.includes(selIng))) {
+
+            // All ingredients are present. Perform combination.
+            ingredients.forEach(ingredient => {
+                removeItemFromInventory(ingredient);
+            });
+            addItemToInventory(result);
+
+            gameState.message = `Successfully combined items to create: ${result}!`;
+            combinationMade = true;
+            break; // Exit loop once a recipe is successfully used
+        }
+    }
+
+    if (!combinationMade) {
+        gameState.message = "Nothing happened. The selected items don't seem to combine into anything useful.";
+    }
+
+    // Reset combination mode and selected items
+    gameState.isCombining = false;
+    document.getElementById('combineButton').textContent = 'Combine';
+    gameState.selectedForCombination = [];
+    renderMessage();
+    renderInventory();
+    updateHotspotsForCurrentScene(); // In case the new item unlocks something
+}
+
         // Event Listeners
         restartButton.addEventListener('click', initializeGame);
+        // Add this:
+        // const combineButton = document.getElementById('combineButton'); // Ensure it's defined // Already declared globally
+        if (combineButton) { // Check if button exists
+            combineButton.addEventListener('click', toggleCombinationMode);
+        } else {
+            console.error("Combine button not found in DOM");
+        }
 
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
