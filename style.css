@@ -101,3 +101,41 @@ body {
             margin-bottom: 1rem;
             color: #082f49;
         }
+
+/* Add this to the end of style.css */
+#combineButton {
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    padding: 10px 15px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    margin-top: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+#combineButton:hover {
+    background-color: #45a049;
+}
+
+/* Styles for item combination */
+.selectable-item {
+    cursor: pointer;
+    padding: 5px;
+    border: 1px dashed #ccc;
+    margin-bottom: 2px;
+}
+
+.selectable-item:hover {
+    background-color: #f0f0f0;
+}
+
+.selected-for-combination {
+    background-color: #aaddff; /* Light blue background */
+    border: 1px solid #66ccff; /* Original border */
+    color: #111; /* Dark grey/near-black text for better contrast */
+    /* font-weight: bold; */ /* Optional: uncomment to make text bold */
+}
