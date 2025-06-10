@@ -157,7 +157,7 @@
         };
 
 const combinationRecipes = {
-    "torch": { "ingredients": ["stick", "cloth", "oil"], "result": "torch" }
+    "torch": { "ingredients": ["stick", "cloth", "oil"], "result": "Torch" } // Changed "torch" to "Torch"
 };
 
         // --- Interactive Object Definitions ---
@@ -621,23 +621,30 @@ function attemptCombination() {
     let combinationMade = false;
     for (const recipeName in combinationRecipes) {
         const recipe = combinationRecipes[recipeName];
-        const ingredients = recipe.ingredients;
+        // const ingredients = recipe.ingredients; // Keep original casing for adding result
         const result = recipe.result;
 
-        // Check if selected items match the ingredients list (order doesn't matter, count matters)
-        if (ingredients.length === gameState.selectedForCombination.length &&
-            ingredients.every(ing => gameState.selectedForCombination.includes(ing)) &&
-            gameState.selectedForCombination.every(selIng => ingredients.includes(selIng))) {
+        const selectedLowercase = gameState.selectedForCombination.map(item => item.toLowerCase());
+        const ingredientsLowercase = recipe.ingredients.map(item => item.toLowerCase());
+
+        // Check if selected items (converted to lowercase) match the ingredients list (converted to lowercase)
+        // Order doesn't matter, count matters.
+        if (ingredientsLowercase.length === selectedLowercase.length &&
+            ingredientsLowercase.every(ingLC => selectedLowercase.includes(ingLC)) &&
+            selectedLowercase.every(selIngLC => ingredientsLowercase.includes(selIngLC))) {
 
             // All ingredients are present. Perform combination.
-            ingredients.forEach(ingredient => {
-                removeItemFromInventory(ingredient);
-            });
-            addItemToInventory(result);
+            // IMPORTANT: When removing items, use the original casing from gameState.selectedForCombination
 
-            gameState.message = `Successfully combined items to create: ${result}!`;
+            // gameState.selectedForCombination contains the items with their original casing from inventory.
+            gameState.selectedForCombination.forEach(ingredientToRemove => {
+                removeItemFromInventory(ingredientToRemove);
+            });
+            addItemToInventory(recipe.result); // recipe.result provides the casing for the new item.
+
+            gameState.message = `Successfully combined items to create: ${recipe.result}!`;
             combinationMade = true;
-            break; // Exit loop once a recipe is successfully used
+            break;
         }
     }
 
