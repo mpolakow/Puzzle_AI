@@ -249,12 +249,12 @@ const combinationRecipes = {
                         removeItemFromInventory("Chest Key");
 	                addItemToInventory("Ring")
 			gameState.flags.chestOpened = true;
-                        // ADD THIS LINE to reveal the chest_key in the Storage scene
-                        gameState.flags.hotspot_Storage_chest_key_visible = true;
                     } else if (gameState.flags.chestOpened) {
                             gameState.message = "The chest is empty.";
                     } else {
                         gameState.message = "The chest is closed shut. You need a key.";
+                        // ADD THIS LINE to reveal the chest_key in the Storage scene
+                        gameState.flags.hotspot_Storage_chest_key_visible = true;			    
                     }
                 }
             },
