@@ -105,7 +105,8 @@
                         id: "chest_key",
                         imageUrl: "https://ai.oldwisebear.com/Game1/chest_key.png",
                         style: { left: "20%", top: "80%", width: "10%", height: "5%" },
-                        objectId: "pick_upchest_chest_key"
+                        objectId: "pick_upchest_chest_key",
+                        initiallyHidden: true // Added this line
                     },
                     {
                         id: "pickup_oil",
@@ -244,10 +245,12 @@ const combinationRecipes = {
             "inspect_chest": {
                 handler: () => {
                     if (checkInventory("Chest Key")) {
-                        gameState.message = "You use the Chest Key and the chest creaks open. You find a shiny ring... whos it might be.";
+                        gameState.message = "You use the Chest Key and the chest creaks open. You find a shiny ring... whos it might be. As the lock clicks, you hear a faint sound from the trapdoor area in the city."; // Added a bit of narrative flair
                         removeItemFromInventory("Chest Key");
 	                addItemToInventory("Ring")
 			gameState.flags.chestOpened = true;
+                        // ADD THIS LINE to reveal the chest_key in the Storage scene
+                        gameState.flags.hotspot_Storage_chest_key_visible = true;
                     } else if (gameState.flags.chestOpened) {
                             gameState.message = "The chest is empty.";
                     } else {
@@ -269,12 +272,22 @@ const combinationRecipes = {
             },
             "pick_upchest_chest_key": {
                 handler: () => {
-                    if (!gameState.flags.keyObtained) {
-                        gameState.message = "You look at the ground and find a key laying around.";
-	                addItemToInventory("Chest Key")
-			gameState.flags.keyObtained = true;
-                    }  else {
-                        gameState.message = "The key is just laying there.";
+                    // Check if the key is meant to be visible (flag set by opening chest)
+                    // AND if it hasn't been obtained yet.
+                    if (gameState.flags.hotspot_Storage_chest_key_visible && !gameState.flags.keyObtained) {
+                        gameState.message = "You pick up the key from the ground. It vanishes after you take it.";
+                        addItemToInventory("Chest Key");
+                        gameState.flags.keyObtained = true;
+                        // Make the hotspot disappear by resetting its visibility flag
+                        gameState.flags.hotspot_Storage_chest_key_visible = false;
+                    } else if (gameState.flags.keyObtained) {
+                        // This state might be reached if somehow clicked again before redraw,
+                        // or if logic changes.
+                        gameState.message = "You've already picked up the key from here.";
+                    } else {
+                        // This case should ideally not be hit if shouldDisplayHotspot works correctly.
+                        // It implies the hotspot was visible but its trigger flag wasn't set.
+                        gameState.message = "It seems to be just out of reach or not interactive right now.";
                     }
                 }
             },
@@ -497,17 +510,25 @@ const combinationRecipes = {
         }
 
         function shouldDisplayHotspot(objectId, hsData) {
+            // New logic for initially hidden hotspots
+            if (hsData.initiallyHidden) {
+                const visibilityFlag = `hotspot_${gameState.currentScene}_${hsData.id}_visible`;
+                return !!gameState.flags[visibilityFlag]; // Show if flag is true, otherwise hide
+            }
+
+            // Existing logic for hotspots that disappear after interaction
+            // These apply to hotspots that are NOT initiallyHidden
             if (objectId === "pickup_red_flower" && gameState.flags.redFlowerTaken) return false;
-            // if (objectId === "pickup_red_flower" && gameState.flags.redFlowerTaken) return false; // Duplicate line removed for clarity
             if (objectId === "inspect_rake" && gameState.flags.rakeObtained) return false;
-            if (objectId === "pick_upchest_chest_key" && gameState.flags.keyObtained) return false;
+            // If pick_upchest_chest_key is NOT initiallyHidden, this rule would apply.
+            // Given it's currently set to initiallyHidden: true for testing,
+            // its visibility is governed by the block above.
+            // Adding !hsData.initiallyHidden to be explicit that this rule is for non-initiallyHidden items or for after they become visible and obtained.
+            if (objectId === "pick_upchest_chest_key" && gameState.flags.keyObtained && !hsData.initiallyHidden) return false;
             if (objectId === "pickup_cloth" && gameState.flags.clothCollected) return false;
             if (objectId === "pickup_oil" && gameState.flags.oilCollected) return false;
-            // For inspect_rubble, the existing stoneCollected flag (and potentially stickCollected) in its handler
-            // should determine if it continues to show or what message it gives.
-            // If the hotspot itself (gate_rubble) should disappear after full looting,
-            // we might need to adjust based on hsData.id, but the current objectId based logic is fine.
-            return true;
+
+            return true; // Default to show if no other rules hide it
         }
 
         function renderMessage() {
