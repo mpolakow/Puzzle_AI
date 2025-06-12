@@ -5,6 +5,8 @@
         const inventoryList = document.getElementById('inventoryList');
         const restartButton = document.getElementById('restartButton');
         const combineButton = document.getElementById('combineButton'); // Add this line
+        const lookAtButton = document.getElementById('lookAtButton'); // Added
+        const useButton = document.getElementById('useButton'); // Added
 
         // Game State
         let gameState = {};
@@ -161,39 +163,58 @@ const combinationRecipes = {
     "torch": { "ingredients": ["stick", "cloth", "oil"], "result": "Torch" } // Changed "torch" to "Torch"
 };
 
+// --- Item Descriptions (for "look at" action on inventory items) ---
+const itemDescriptions = {
+    "Stone": "A rough, grey stone. It has a nice weight to it, good for throwing perhaps?",
+    "Stick": "A sturdy wooden stick, about the length of your forearm.",
+    "Rake": "A long-handled rake with several metal tines. Looks useful for clearing debris.",
+    "Cloth": "A piece of thick, absorbent cloth. It's a bit grimy.",
+    "Oil": "A small flask containing a viscous, flammable oil.",
+    "Torch": "A stick with oil-soaked cloth wrapped around one end. Ready to be lit.",
+    "Chest Key": "A small, ornate metal key. Seems designed for a chest.",
+    "Ring": "A beautiful, intricately carved ring. It feels warm to the touch."
+    // Add more items as they are introduced to the game
+};
+
         // --- Interactive Object Definitions ---
         const interactiveObjects = {
             "gate_entrance": {
+                lookDescription: "A massive, ancient-looking gate made of dark wood and reinforced with iron bands. It appears to be the only way into whatever lies beyond.",
                 handler: () => {
                     changeScene("City");
                     gameState.message = "You enter the city slowly, not knowing what's inside.";
                 }
             },
             "enter_house": {
+                lookDescription: "A dilapidated, two-story wooden house. Smoke damage is visible around the windows, and the front door hangs precariously on one hinge.",
                 handler: () => {
                     changeScene("House");
                     gameState.message = "You enter the house, hoping it won't collapse at you.";
                 }
             },
             "exit_house": {
+                lookDescription: "The doorway leading back out of the house into the city square.",
                 handler: () => {
                     changeScene("City");
                     gameState.message = "You come back to the city as quietly as possible.";
                 }
             },
             "exit_storage": {
+                lookDescription: "A sturdy wooden ladder leading back up to the city through a trapdoor.",
                 handler: () => {
                     changeScene("City");
                     gameState.message = "You come back to the city as quietly as possible.";
                 }
             },
             "gate_exit": {
+                lookDescription: "The main gate leading out of the city, back towards where you started.",
                 handler: () => {
                     changeScene("Gate");
                     gameState.message = "You are back in front of the gate.";
                 }
             },
             "inspect_ring_hole": {
+                lookDescription: "A curious, perfectly circular indentation in the stone wall, about the size of a large coin. It seems tailor-made for something round.",
                 handler: () => {
                     if (checkInventory("Ring")) {
                         changeScene("END");
@@ -209,6 +230,7 @@ const combinationRecipes = {
                 }
             },
             "inspect_rubble": {
+                lookDescription: "A pile of charred wood, stones, and debris at the base of the gate. It looks like something collapsed or was destroyed here.",
                  handler: () => {
                     if (!gameState.flags.stoneCollected) {
                         gameState.message = "You look through the rubble, find some stones and a sturdy-looking stick. You take one of each.";
@@ -243,6 +265,7 @@ const combinationRecipes = {
                 }
             },
             "inspect_chest": {
+                lookDescription: "A heavy wooden chest, bound with iron. It has a prominent, sturdy lock.",
                 handler: () => {
                     if (checkInventory("Chest Key")) {
                         gameState.message = "You use the Chest Key and the chest creaks open. You find a shiny ring... whos it might be. As the lock clicks, you hear a faint sound from the trapdoor area in the city."; // Added a bit of narrative flair
@@ -271,6 +294,7 @@ const combinationRecipes = {
                 }
             },
             "pick_upchest_chest_key": {
+                lookDescription: "A small, glinting metal object on the dusty floor. It looks like a key.",
                 handler: () => {
                     // Check if the key is meant to be visible (flag set by opening chest)
                     // AND if it hasn't been obtained yet.
@@ -292,6 +316,7 @@ const combinationRecipes = {
                 }
             },
             "talk_to_cultist": {
+                lookDescription: "A menacing figure in dark robes, standing guard. They seem focused on something in the distance, occasionally muttering.",
                 handler: () => {
                         // The cultist get more and more annoyed and finally kill the player
                         gameState.flags.CultistAnnoyance++;
@@ -322,6 +347,7 @@ const combinationRecipes = {
                         }                }
             },
             "talk_to_cultist_leader": {
+                lookDescription: "A imposing figure atop a dark horse, adorned with strange symbols. They exude an aura of unsettling authority.",
                 handler: () => {
                         // The cultist get more and more annoyed and finally kill the player
                         gameState.flags.CultistLeaderAnnoyance++;
@@ -361,6 +387,7 @@ const combinationRecipes = {
                 }
             },
             "pickup_oil": {
+                lookDescription: "A small, clay flask with a cork stopper. It seems to contain some kind of liquid.", // Assuming this is the hotspot for picking up oil
                 handler: () => {
                     if (!checkInventory("Oil")) {
                         gameState.message = "You find a small flask of oil.";
@@ -372,6 +399,7 @@ const combinationRecipes = {
                 }
             },
             "inspect_dark_area_storage": {
+                lookDescription: "A particularly shadowy corner of the storage room. It's hard to make out any details in the gloom.",
                 handler: () => {
                     if (checkInventory("Torch")) {
                         gameState.message = "You use the torch to light up the dark area. You see a small, almost invisible inscription on the wall! It reads: 'The path is revealed to those who persist.'";
@@ -380,6 +408,21 @@ const combinationRecipes = {
                         // gameState.flags.darkAreaInspected = true; // Flag to prevent re-inspection or change message
                     } else {
                         gameState.message = "It's too dark to see anything in this corner. If only you had a light source...";
+                    }
+                }
+            }
+            // TODO: Add lookDescription for "pickup_cloth" if it's a distinct hotspot.
+            // Assuming "pickup_cloth" is an action on a hotspot that might be called "cloth_pile" or similar.
+            // If "pickup_cloth" is the ID of the hotspot itself:
+            ,"pickup_cloth": { // This assumes "pickup_cloth" is an objectId for a hotspot
+                lookDescription: "A piece of discarded cloth lying on the ground.",
+                handler: () => {
+                     if (!checkInventory("Cloth")) {
+                        gameState.message = "You find a piece of cloth that seems usable.";
+                        addItemToInventory("Cloth");
+                        gameState.flags.clothCollected = true;
+                    } else {
+                        gameState.message = "You've already taken the cloth.";
                     }
                 }
             }
@@ -406,11 +449,32 @@ const combinationRecipes = {
                 },
                 isCombining: false,
                 selectedForCombination: [],
+                currentAction: "use", // Added for new action mode
+                selectedItemForUse: null, // Added for using items on hotspots
             };
             changeScene(gameState.currentScene, true);
             renderInventory();
             restartButton.style.display = 'none';
             if (combineButton) combineButton.style.display = 'inline-block';
+            updateActionButtonsUI(); // Initialize button states
+        }
+
+        // --- UI Update Functions ---
+        function updateActionButtonsUI() {
+            if (!lookAtButton || !useButton) {
+                console.warn("Action buttons not yet available in DOM for UI update.");
+                return;
+            }
+            // Remove 'selected' class from all action buttons
+            lookAtButton.classList.remove('selected');
+            useButton.classList.remove('selected');
+            // Add 'selected' class to the current action button
+            if (gameState.currentAction === "look") {
+                lookAtButton.classList.add('selected');
+            } else if (gameState.currentAction === "use") {
+                useButton.classList.add('selected');
+            }
+            // Future actions can be added here with else if
         }
 
         function changeScene(sceneId, isInitialLoad = false) {
@@ -490,18 +554,47 @@ const combinationRecipes = {
                     }
 
                     hotspotEl.addEventListener('click', () => {
-                        const sceneAtInteractionTime = gameScenes[gameState.currentScene];
-                        const objectLogic = interactiveObjects[hsData.objectId];
-                        if (objectLogic && typeof objectLogic.handler === 'function') {
-                            objectLogic.handler();
-                            renderMessage();
-                            renderInventory();
+                        const sceneAtInteractionTime = gameScenes[gameState.currentScene]; // Capture current scene
+                        const objectId = hsData.objectId; // Cache objectId
+                        const objectLogic = interactiveObjects[objectId];
 
-                            if (sceneAtInteractionTime === gameScenes[gameState.currentScene]) {
-                                updateHotspotsForCurrentScene();
+                        if (gameState.currentAction === "look") {
+                            const hotspotName = hsData.id || objectId; // Use hsData.id for a more user-friendly name if available
+                            if (objectLogic && objectLogic.lookDescription) {
+                                gameState.message = objectLogic.lookDescription;
+                            } else {
+                                gameState.message = `You look at ${hotspotName.replace(/_/g, ' ')}. It looks interesting.`; // Fallback
+                            }
+                            renderMessage();
+                        } else if (gameState.currentAction === "use") {
+                            if (gameState.selectedItemForUse) {
+                                // Handle using selected item on hotspot
+                                const itemUsed = gameState.selectedItemForUse;
+                                gameState.selectedItemForUse = null; // Reset selected item
+                                // TODO: Implement actual item-on-hotspot interaction logic here.
+                                // This will likely involve checking itemUsed and objectId against a ruleset.
+                                gameState.message = `You try to use ${itemUsed} on ${objectId.replace(/_/g, ' ')}. Nothing specific happens yet.`;
+                                renderMessage();
+                                renderInventory(); // To remove 'selected-for-use' class
+                            } else {
+                                // Handle direct "use" action on hotspot (existing logic)
+                                if (objectLogic && typeof objectLogic.handler === 'function') {
+                                    objectLogic.handler();
+                                    renderMessage();
+                                    renderInventory();
+                                    if (sceneAtInteractionTime === gameScenes[gameState.currentScene]) {
+                                        updateHotspotsForCurrentScene();
+                                    }
+                                } else {
+                                    console.warn("No handler for objectId:", objectId);
+                                    gameState.message = `You try to use ${objectId.replace(/_/g, ' ')}, but nothing happens.`;
+                                    renderMessage();
+                                }
                             }
                         } else {
-                            console.warn("No handler for objectId:", hsData.objectId);
+                            console.warn("Unknown action selected:", gameState.currentAction);
+                            gameState.message = "You are unsure what to do.";
+                            renderMessage();
                         }
                     });
                     gameArea.appendChild(hotspotEl);
@@ -551,13 +644,45 @@ const combinationRecipes = {
                     li.textContent = item;
                     // console.log("Processing item for inventory display:", item); // Optional: very verbose
                     if (gameState.isCombining) {
-                        console.log("renderInventory: In 'isCombining' mode for item:", item); // DEBUG
+                        // Combination mode logic
                         li.classList.add('selectable-item');
                         if (gameState.selectedForCombination.includes(item)) {
                             li.classList.add('selected-for-combination');
                         }
                         li.addEventListener('click', () => toggleItemSelectionForCombination(item));
-                        console.log("renderInventory: Added click listener for item:", item); // DEBUG
+                    } else {
+                        // Not in combination mode - handle "look" or "use" item selection
+                        li.classList.add('selectable-item'); // General styling for clickable inventory items
+                        if (gameState.currentAction === "use" && gameState.selectedItemForUse === item) {
+                            li.classList.add('selected-for-use');
+                        }
+
+                        li.addEventListener('click', () => {
+                            if (gameState.currentAction === "look") {
+                                if (itemDescriptions[item]) {
+                                    gameState.message = itemDescriptions[item];
+                                } else {
+                                    gameState.message = `You examine the ${item}. It seems like a normal ${item}.`; // Fallback
+                                }
+                                if (gameState.selectedItemForUse) { // If an item was selected for use, deselect it
+                                    gameState.selectedItemForUse = null;
+                                    renderInventory(); // Update inventory to remove visual selection
+                                }
+                                renderMessage();
+                            } else if (gameState.currentAction === "use") {
+                                if (gameState.selectedItemForUse === item) {
+                                    // Item is already selected, so deselect it
+                                    gameState.selectedItemForUse = null;
+                                    gameState.message = "Item deselected.";
+                                } else {
+                                    // Select item for use
+                                    gameState.selectedItemForUse = item;
+                                    gameState.message = `${item} selected. Click on something in the scene to use it on, or click the item again to deselect.`;
+                                }
+                                renderInventory(); // Re-render to show/hide 'selected-for-use'
+                                renderMessage();
+                            }
+                        });
                     }
                     inventoryList.appendChild(li);
                 });
@@ -689,12 +814,42 @@ function attemptCombination() {
 
         // Event Listeners
         restartButton.addEventListener('click', initializeGame);
-        // Add this:
-        // const combineButton = document.getElementById('combineButton'); // Ensure it's defined // Already declared globally
-        if (combineButton) { // Check if button exists
+
+        if (combineButton) {
             combineButton.addEventListener('click', toggleCombinationMode);
         } else {
             console.error("Combine button not found in DOM");
+        }
+
+        if (lookAtButton) {
+            lookAtButton.addEventListener('click', () => {
+                if (gameState.selectedItemForUse) {
+                    gameState.selectedItemForUse = null;
+                    // gameState.message = "Item use cancelled due to action mode change."; // Optional message
+                    renderInventory(); // Update to remove selection class
+                    // renderMessage(); // Optional
+                }
+                gameState.currentAction = "look";
+                updateActionButtonsUI();
+            });
+        } else {
+            console.error("Look At button not found in DOM");
+        }
+
+        if (useButton) {
+            useButton.addEventListener('click', () => {
+                // If switching to "use" mode, we don't necessarily clear selectedItemForUse,
+                // as the user might have selected "use", then an item, then clicked "use" button again.
+                // However, if they were in "look" and had an item selected (which shouldn't happen with current logic, but for safety):
+                if (gameState.currentAction !== "use" && gameState.selectedItemForUse) {
+                     gameState.selectedItemForUse = null;
+                     renderInventory();
+                }
+                gameState.currentAction = "use";
+                updateActionButtonsUI();
+            });
+        } else {
+            console.error("Use button not found in DOM");
         }
 
         // Initialize
@@ -719,5 +874,37 @@ function attemptCombination() {
             } else {
                 messageArea.textContent = "Error: Initial scene configuration is missing. Cannot start game.";
                 console.error("Initial scene 'Gate' or its imageUrl is not defined in gameScenes.");
+            }
+
+            // Add event listener for clicking on the game background (gameImage)
+            if (gameImage) {
+                gameImage.addEventListener('click', (event) => {
+                    // Ensure the click is directly on the gameImage and not a hotspot (child element)
+                    if (event.target === gameImage) {
+                        if (gameState.currentAction === "look") {
+                            const currentSceneData = gameScenes[gameState.currentScene];
+                            if (currentSceneData && currentSceneData.message) {
+                                gameState.message = currentSceneData.message;
+                            } else {
+                                gameState.message = "You look around. Nothing else of note here."; // Fallback message
+                            }
+                            renderMessage();
+                        }
+                        // In "use" mode, clicking the background does nothing unless an item is selected
+                        // and a specific interaction for "item on background" is defined, which is not the case here.
+                        // If an item is selected for use, clicking the background should probably deselect it or give a message.
+                        else if (gameState.currentAction === "use" && gameState.selectedItemForUse) {
+                            // Optional: Deselect item or provide feedback
+                            // gameState.selectedItemForUse = null;
+                            // gameState.message = `${gameState.selectedItemForUse} cannot be used on the general surroundings.`;
+                            // renderInventory();
+                            // renderMessage();
+                            // For now, let's do nothing specific, to avoid accidental deselection.
+                            // The user has to click the item again in inventory to deselect.
+                        }
+                    }
+                });
+            } else {
+                console.error("gameImage element not found for background click listener.");
             }
         });
