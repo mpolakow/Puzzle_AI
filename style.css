@@ -121,12 +121,13 @@ body {
     background-color: #45a049;
 }
 
-/* Styles for item combination */
+/* Styles for item combination and selection */
 .selectable-item {
     cursor: pointer;
     padding: 5px;
     border: 1px dashed #ccc;
     margin-bottom: 2px;
+    border-radius: 3px; /* Slightly rounded corners for items */
 }
 
 .selectable-item:hover {
@@ -134,8 +135,50 @@ body {
 }
 
 .selected-for-combination {
-    background-color: #aaddff; /* Light blue background */
-    border: 1px solid #66ccff; /* Original border */
-    color: #111; /* Dark grey/near-black text for better contrast */
-    /* font-weight: bold; */ /* Optional: uncomment to make text bold */
+    background-color: #aaddff; /* Light blue background for combination */
+    border: 1px solid #66ccff;
+    color: #111;
+}
+
+.selected-for-use {
+    background-color: #d1fae5; /* Light green background for "use" selection */
+    border: 1px solid #6ee7b7; /* Green border */
+    color: #065f46; /* Darker green text */
+}
+
+
+/* Styles for general action buttons */
+.action-button {
+    background-color: #3b82f6; /* Blue */
+    color: white;
+    font-weight: 600;
+    padding: 0.6rem 1.2rem; /* Similar to restartButton */
+    border-radius: 0.5rem; /* Similar to restartButton */
+    cursor: pointer;
+    transition: background-color 0.2s, box-shadow 0.2s;
+    border: none;
+    margin: 0.25rem; /* Add some margin for spacing */
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px; /* Similar to combineButton */
+    text-align: center;
+}
+
+.action-button:hover {
+    background-color: #2563eb; /* Darker blue */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Style for the selected action button */
+.action-button.selected {
+    background-color: #1d4ed8; /* Even darker blue or a distinct color */
+    box-shadow: 0 0 0 2px white, 0 0 0 4px #1d4ed8; /* Outline effect */
+    /* Or use a border:
+    border: 2px solid #0c4a6e;
+    */
+}
+
+/* Ensure controls area lays out buttons nicely if they wrap */
+.controls-area {
+    padding: 0.5rem 0;
 }
