@@ -164,27 +164,40 @@
                             renderMessage();
                         } else if (gameState.currentAction === "use") {
                             if (gameState.selectedItemForUse) {
-                                // Handle using selected item on hotspot
                                 const itemUsed = gameState.selectedItemForUse;
-                                gameState.selectedItemForUse = null; // Reset selected item
-                                // TODO: Implement actual item-on-hotspot interaction logic here.
-                                // This will likely involve checking itemUsed and objectId against a ruleset.
-                                gameState.message = `You try to use ${itemUsed} on ${objectId.replace(/_/g, ' ')}. Nothing specific happens yet.`;
+                                // Core logic for using an item on a hotspot
+                                if (objectLogic && objectLogic.requiredItem === itemUsed) {
+                                    // Correct item is used.
+                                    if(typeof objectLogic.handler === 'function') {
+                                        objectLogic.handler(true); // Pass a flag indicating item was used
+                                    }
+                                    removeItemFromInventory(itemUsed); // Remove the item after successful use
+                                } else {
+                                    // Incorrect item or hotspot doesn't need an item.
+                                    gameState.message = `You can't use the ${itemUsed} here.`;
+                                }
+                                gameState.selectedItemForUse = null; // Deselect item after use attempt
                                 renderMessage();
-                                renderInventory(); // To remove 'selected-for-use' class
+                                renderInventory();
+                                updateHotspotsForCurrentScene();
                             } else {
-                                // Handle direct "use" action on hotspot (existing logic)
+                                // Handle direct "use" action on hotspot (no item selected)
                                 if (objectLogic && typeof objectLogic.handler === 'function') {
-                                    objectLogic.handler();
-                                    renderMessage();
-                                    renderInventory();
-                                    if (sceneAtInteractionTime === gameScenes[gameState.currentScene]) {
-                                        updateHotspotsForCurrentScene();
+                                    // Check if the handler for this object REQUIRES an item.
+                                    if (objectLogic.requiredItem) {
+                                        gameState.message = `You need to use an item here.`;
+                                    } else {
+                                        // The object can be used directly without an item.
+                                        objectLogic.handler(false); // Pass a flag indicating no item was used
                                     }
                                 } else {
                                     console.warn("No handler for objectId:", objectId);
                                     gameState.message = `You try to use ${objectId.replace(/_/g, ' ')}, but nothing happens.`;
-                                    renderMessage();
+                                }
+                                renderMessage();
+                                renderInventory();
+                                if (sceneAtInteractionTime === gameScenes[gameState.currentScene]) {
+                                    updateHotspotsForCurrentScene();
                                 }
                             }
                         } else {
@@ -324,9 +337,6 @@ function toggleItemSelectionForCombination(itemName) {
         }
         function removeItemFromInventory(item) {
             gameState.inventory = gameState.inventory.filter(i => i !== item);
-        }
-        function checkInventory(item) {
-            return gameState.inventory.includes(item);
         }
 
 function toggleCombinationMode() {
