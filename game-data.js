@@ -92,7 +92,8 @@ const gameScenes = {
                         imageUrl: "https://ai.oldwisebear.com/Game1/chest_key.png",
                         style: { left: "20%", top: "80%", width: "10%", height: "5%" },
                         objectId: "pick_upchest_chest_key",
-                        initiallyHidden: true // Added this line
+                        initiallyHidden: true, // Added this line
+			toggleable: "once"
                     },
                     {
                         id: "pickup_oil",
@@ -258,8 +259,10 @@ const interactiveObjects = {
                             gameState.message = "The chest is empty.";
                     } else {
                         gameState.message = "The chest is closed shut. You need a key.";
-                        // ADD THIS LINE to reveal the chest_key in the Storage scene
-                        gameState.flags.hotspot_Storage_chest_key_visible = true;
+                        if (!gameState.flags.keyObtained) {
+                            // ADD THIS LINE to reveal the chest_key in the Storage scene
+                            gameState.flags.hotspot_Storage_chest_key_visible = true;
+                        }
                     }
                 }
             },
@@ -284,6 +287,7 @@ const interactiveObjects = {
                         gameState.message = "You pick up the key from the ground. It vanishes after you take it.";
                         addItemToInventory("Chest Key");
                         gameState.flags.keyObtained = true;
+                        gameState.flags.hotspot_chest_key_toggled = true;
                         // Make the hotspot disappear by resetting its visibility flag
                         gameState.flags.hotspot_Storage_chest_key_visible = false;
                     } else if (gameState.flags.keyObtained) {

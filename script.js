@@ -210,6 +210,10 @@
             // New logic for initially hidden hotspots
             if (hsData.initiallyHidden) {
                 const visibilityFlag = `hotspot_${gameState.currentScene}_${hsData.id}_visible`;
+                if (hsData.toggleable === 'once') {
+                    const toggledFlag = `hotspot_${hsData.id}_toggled`;
+                    return !!gameState.flags[visibilityFlag] && !gameState.flags[toggledFlag];
+                }
                 return !!gameState.flags[visibilityFlag]; // Show if flag is true, otherwise hide
             }
 
