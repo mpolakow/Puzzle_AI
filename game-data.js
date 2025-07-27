@@ -198,8 +198,8 @@ const interactiveObjects = {
             "inspect_ring_hole": {
                 lookDescription: "A curious, perfectly circular indentation in the stone wall, about the size of a large coin. It seems tailor-made for something round.",
                 requiredItem: "Ring",
-                handler: (itemUsed) => {
-                    if (itemUsed) {
+                handler: () => {
+                    if (gameState.selectedItemForUse === "Ring") {
                         changeScene("END");
                         gameState.message = "You insert the ring and hear a loud clang. Suddenly the wall slides open in front of you, you go through a long tunnel at which end you see a burning castle. \n\nCongratulations! You've passed the cultist!\n\nThanks for playing!";
                         const existingHotspots = gameArea.querySelectorAll('.hotspot');
@@ -233,8 +233,8 @@ const interactiveObjects = {
             },
             "inspect_fire_rubble": {
                 requiredItem: "Rake",
-                handler: (itemUsed) => {
-                    if (itemUsed) {
+                handler: () => {
+                    if (gameState.selectedItemForUse === "Rake") {
                         gameState.message = "You use the rake to search through the smoldering rubble.";
 			changeScene("Storage");
 			gameState.flags.trapdoor_unlocked = true;
@@ -249,8 +249,8 @@ const interactiveObjects = {
             "inspect_chest": {
                 lookDescription: "A heavy wooden chest, bound with iron. It has a prominent, sturdy lock.",
                 requiredItem: "Chest Key",
-                handler: (itemUsed) => {
-                    if (itemUsed) {
+                handler: () => {
+                    if (gameState.selectedItemForUse === "Chest Key") {
                         gameState.message = "You use the Chest Key and the chest creaks open. You find a shiny ring... whos it might be. As the lock clicks, you hear a faint sound from the trapdoor area in the city."; // Added a bit of narrative flair
 	                addItemToInventory("Ring")
 			gameState.flags.chestOpened = true;
@@ -265,8 +265,8 @@ const interactiveObjects = {
             },
             "inspect_rake": {
                 requiredItem: "Stone",
-                handler: (itemUsed) => {
-                    if (itemUsed) {
+                handler: () => {
+                    if (gameState.selectedItemForUse === "Stone") {
                         gameState.message = "You throw the stone feeling lucky and you actually are, the rake fall to the ground and you pick it up.";
 	                addItemToInventory("Rake")
 			gameState.flags.rakeObtained = true;
@@ -383,8 +383,8 @@ const interactiveObjects = {
             "inspect_dark_area_storage": {
                 lookDescription: "A particularly shadowy corner of the storage room. It's hard to make out any details in the gloom.",
                 requiredItem: "Torch",
-                handler: (itemUsed) => {
-                    if (itemUsed) {
+                handler: () => {
+                    if (gameState.selectedItemForUse === "Torch") {
                         gameState.message = "You use the torch to light up the dark area. You see a small, almost invisible inscription on the wall! It reads: 'The path is revealed to those who persist.'";
                         // Potentially remove torch if it's a one-time use for this puzzle
                         // removeItemFromInventory("Torch");

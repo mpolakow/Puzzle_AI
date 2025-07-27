@@ -165,17 +165,18 @@
                         } else if (gameState.currentAction === "use") {
                             if (gameState.selectedItemForUse) {
                                 const itemUsed = gameState.selectedItemForUse;
-                                // Core logic for using an item on a hotspot
+                                const originalMessage = gameState.message;
+
+                                if (objectLogic && typeof objectLogic.handler === 'function') {
+                                    objectLogic.handler();
+                                }
+
                                 if (objectLogic && objectLogic.requiredItem === itemUsed) {
-                                    // Correct item is used.
-                                    if(typeof objectLogic.handler === 'function') {
-                                        objectLogic.handler(true); // Pass a flag indicating item was used
-                                    }
-                                    removeItemFromInventory(itemUsed); // Remove the item after successful use
-                                } else {
-                                    // Incorrect item or hotspot doesn't need an item.
+                                    removeItemFromInventory(itemUsed);
+                                } else if (originalMessage === gameState.message) {
                                     gameState.message = `You can't use the ${itemUsed} here.`;
                                 }
+
                                 gameState.selectedItemForUse = null; // Deselect item after use attempt
                                 renderMessage();
                                 renderInventory();
@@ -183,13 +184,7 @@
                             } else {
                                 // Handle direct "use" action on hotspot (no item selected)
                                 if (objectLogic && typeof objectLogic.handler === 'function') {
-                                    // Check if the handler for this object REQUIRES an item.
-                                    if (objectLogic.requiredItem) {
-                                        gameState.message = `You need to use an item here.`;
-                                    } else {
-                                        // The object can be used directly without an item.
-                                        objectLogic.handler(false); // Pass a flag indicating no item was used
-                                    }
+                                    objectLogic.handler();
                                 } else {
                                     console.warn("No handler for objectId:", objectId);
                                     gameState.message = `You try to use ${objectId.replace(/_/g, ' ')}, but nothing happens.`;
