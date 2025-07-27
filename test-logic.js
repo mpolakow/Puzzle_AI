@@ -1,0 +1,101 @@
+const assert = require('assert');
+
+// Mock game data
+const combinationRecipes = {
+    "torch": { "ingredients": ["stick", "cloth", "oil"], "result": { "name": "Torch", "uses": 3 } }
+};
+
+const itemDescriptions = {
+    "Torch": "A stick with oil-soaked cloth wrapped around one end. Ready to be lit.",
+};
+
+// Functions to test
+let gameState;
+
+function initializeGame() {
+    gameState = {
+        inventory: [],
+        selectedForCombination: [],
+    };
+}
+
+function addItemToInventory(item) {
+    const existingItem = gameState.inventory.find(i => (i.name || i) === (item.name || item));
+    if (existingItem && existingItem.uses) {
+        existingItem.uses += item.uses || 0;
+    } else if (!existingItem) {
+        gameState.inventory.push(item);
+    }
+}
+
+function removeItemFromInventory(item) {
+    const itemToRemove = typeof item === 'string' ? gameState.inventory.find(i => (i.name || i) === item) : item;
+
+    if (itemToRemove && itemToRemove.uses) {
+        itemToRemove.uses--;
+        if (itemToRemove.uses <= 0) {
+            gameState.inventory = gameState.inventory.filter(i => i !== itemToRemove);
+        }
+    } else {
+         gameState.inventory = gameState.inventory.filter(i => i !== itemToRemove);
+    }
+}
+
+function attemptCombination() {
+    let combinationMade = false;
+    for (const recipeName in combinationRecipes) {
+        const recipe = combinationRecipes[recipeName];
+        const result = recipe.result;
+
+        const selectedLowercase = gameState.selectedForCombination.map(item => (item.name || item).toLowerCase());
+        const ingredientsLowercase = recipe.ingredients.map(item => item.toLowerCase());
+
+        if (ingredientsLowercase.length === selectedLowercase.length &&
+            ingredientsLowercase.every(ingLC => selectedLowercase.includes(ingLC)) &&
+            selectedLowercase.every(selIngLC => ingredientsLowercase.includes(selIngLC))) {
+
+            gameState.selectedForCombination.forEach(ingredientToRemove => {
+                removeItemFromInventory(ingredientToRemove);
+            });
+            addItemToInventory(recipe.result);
+
+            combinationMade = true;
+            break;
+        }
+    }
+    return combinationMade;
+}
+
+// Tests
+try {
+    // Test 1: Crafting a torch
+    initializeGame();
+    addItemToInventory("Stick");
+    addItemToInventory("Cloth");
+    addItemToInventory("Oil");
+    gameState.selectedForCombination = ["Stick", "Cloth", "Oil"];
+    const combinationResult = attemptCombination();
+    assert.strictEqual(combinationResult, true, 'Test 1 Failed: Combination should be successful');
+    assert.strictEqual(gameState.inventory.length, 1, 'Test 1 Failed: Inventory should have 1 item');
+    assert.deepStrictEqual(gameState.inventory[0], { name: 'Torch', uses: 3 }, 'Test 1 Failed: Torch object is incorrect');
+    console.log('Test 1 Passed: Torch crafted successfully');
+
+    // Test 2: Using the torch
+    removeItemFromInventory(gameState.inventory[0]);
+    assert.strictEqual(gameState.inventory[0].uses, 2, 'Test 2 Failed: Torch should have 2 uses left');
+    console.log('Test 2 Passed: Torch uses decremented');
+
+    // Test 3: Using the torch again
+    removeItemFromInventory(gameState.inventory[0]);
+    assert.strictEqual(gameState.inventory[0].uses, 1, 'Test 3 Failed: Torch should have 1 use left');
+    console.log('Test 3 Passed: Torch uses decremented again');
+
+    // Test 4: Using the torch for the last time
+    removeItemFromInventory(gameState.inventory[0]);
+    assert.strictEqual(gameState.inventory.length, 0, 'Test 4 Failed: Inventory should be empty');
+    console.log('Test 4 Passed: Torch removed from inventory');
+
+    console.log('All tests passed!');
+} catch (error) {
+    console.error(error.message);
+}

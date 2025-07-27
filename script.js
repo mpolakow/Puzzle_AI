@@ -166,16 +166,17 @@
                         } else if (gameState.currentAction === "use") {
                             if (gameState.selectedItemForUse) {
                                 const itemUsed = gameState.selectedItemForUse;
+                                const itemName = typeof itemUsed === 'object' ? itemUsed.name : itemUsed;
                                 const originalMessage = gameState.message;
 
                                 if (objectLogic && typeof objectLogic.handler === 'function') {
                                     objectLogic.handler();
                                 }
 
-                                if (objectLogic && objectLogic.requiredItem === itemUsed) {
+                                if (objectLogic && objectLogic.requiredItem === itemName) {
                                     removeItemFromInventory(itemUsed);
                                 } else if (originalMessage === gameState.message) {
-                                    gameState.message = `You can't use the ${itemUsed} here.`;
+                                    gameState.message = `You can't use the ${itemName} here.`;
                                 }
 
                                 gameState.selectedItemForUse = null; // Deselect item after use attempt
@@ -240,7 +241,6 @@
             }
         }
         function renderInventory() {
-            console.log("renderInventory called. gameState.isCombining:", gameState.isCombining); // DEBUG
             inventoryList.innerHTML = '';
             if (gameState.inventory.length === 0) {
                 const li = document.createElement('li');
@@ -249,45 +249,40 @@
             } else {
                 gameState.inventory.forEach(item => {
                     const li = document.createElement('li');
-                    li.textContent = item;
-                    // console.log("Processing item for inventory display:", item); // Optional: very verbose
+                    const itemName = typeof item === 'object' && item.name ? item.name : item;
+                    const itemUses = typeof item === 'object' && item.uses ? ` (${item.uses})` : '';
+                    li.textContent = `${itemName}${itemUses}`;
+
                     if (gameState.isCombining) {
-                        // Combination mode logic
                         li.classList.add('selectable-item');
                         if (gameState.selectedForCombination.includes(item)) {
                             li.classList.add('selected-for-combination');
                         }
                         li.addEventListener('click', () => toggleItemSelectionForCombination(item));
                     } else {
-                        // Not in combination mode - handle "look" or "use" item selection
-                        li.classList.add('selectable-item'); // General styling for clickable inventory items
+                        li.classList.add('selectable-item');
                         if (gameState.currentAction === "use" && gameState.selectedItemForUse === item) {
                             li.classList.add('selected-for-use');
                         }
 
                         li.addEventListener('click', () => {
                             if (gameState.currentAction === "look") {
-                                if (itemDescriptions[item]) {
-                                    gameState.message = itemDescriptions[item];
-                                } else {
-                                    gameState.message = `You examine the ${item}. It seems like a normal ${item}.`; // Fallback
-                                }
-                                if (gameState.selectedItemForUse) { // If an item was selected for use, deselect it
+                                const description = itemDescriptions[itemName] || `You examine the ${itemName}. It seems like a normal ${itemName}.`;
+                                gameState.message = description;
+                                if (gameState.selectedItemForUse) {
                                     gameState.selectedItemForUse = null;
-                                    renderInventory(); // Update inventory to remove visual selection
+                                    renderInventory();
                                 }
                                 renderMessage();
                             } else if (gameState.currentAction === "use") {
                                 if (gameState.selectedItemForUse === item) {
-                                    // Item is already selected, so deselect it
                                     gameState.selectedItemForUse = null;
                                     gameState.message = "Item deselected.";
                                 } else {
-                                    // Select item for use
                                     gameState.selectedItemForUse = item;
-                                    gameState.message = `${item} selected. Click on something in the scene to use it on, or click the item again to deselect.`;
+                                    gameState.message = `${itemName} selected. Click on something in the scene to use it on, or click the item again to deselect.`;
                                 }
-                                renderInventory(); // Re-render to show/hide 'selected-for-use'
+                                renderInventory();
                                 renderMessage();
                             }
                         });
@@ -297,45 +292,42 @@
             }
         }
 
-function toggleItemSelectionForCombination(itemName) {
-    console.log("toggleItemSelectionForCombination called with item:", itemName); // DEBUG
+function toggleItemSelectionForCombination(item) {
     if (!gameState.isCombining) {
-        console.log("toggleItemSelectionForCombination: Not in combining mode, exiting."); // DEBUG
         return;
     }
 
-    console.log("Before selection change, selectedForCombination:", JSON.stringify(gameState.selectedForCombination)); // DEBUG
-    const index = gameState.selectedForCombination.indexOf(itemName);
+    const index = gameState.selectedForCombination.indexOf(item);
     if (index > -1) {
         gameState.selectedForCombination.splice(index, 1);
-        console.log("Item deselected:", itemName); // DEBUG
     } else {
-        gameState.selectedForCombination.push(itemName);
-        console.log("Item selected:", itemName); // DEBUG
-    }
-    console.log("After selection change, selectedForCombination:", JSON.stringify(gameState.selectedForCombination)); // DEBUG
-
-    // Update the visual state of the item in the list directly
-    const listItems = inventoryList.getElementsByTagName('li');
-    for (let li of listItems) {
-        if (li.textContent === itemName) {
-            if (gameState.selectedForCombination.includes(itemName)) {
-                li.classList.add('selected-for-combination');
-            } else {
-                li.classList.remove('selected-for-combination');
-            }
-            break; // Found the item, no need to continue loop
-        }
+        gameState.selectedForCombination.push(item);
     }
 
-    gameState.message = `Selected for combination: ${gameState.selectedForCombination.join(', ') || 'None'}. Click 'Cancel Combination' to attempt.`;
-    renderMessage(); // renderMessage is fine, it doesn't destroy inventory items
+    renderInventory();
+    const selectedNames = gameState.selectedForCombination.map(i => i.name || i);
+    gameState.message = `Selected for combination: ${selectedNames.join(', ') || 'None'}. Click 'Cancel Combination' to attempt.`;
+    renderMessage();
 }
         function addItemToInventory(item) {
-            if (!gameState.inventory.includes(item)) gameState.inventory.push(item);
+            const existingItem = gameState.inventory.find(i => (i.name || i) === (item.name || item));
+            if (existingItem && existingItem.uses) {
+                existingItem.uses += item.uses || 0;
+            } else if (!existingItem) {
+                gameState.inventory.push(item);
+            }
         }
         function removeItemFromInventory(item) {
-            gameState.inventory = gameState.inventory.filter(i => i !== item);
+            const itemToRemove = typeof item === 'string' ? gameState.inventory.find(i => (i.name || i) === item) : item;
+
+            if (itemToRemove && itemToRemove.uses) {
+                itemToRemove.uses--;
+                if (itemToRemove.uses <= 0) {
+                    gameState.inventory = gameState.inventory.filter(i => i !== itemToRemove);
+                }
+            } else {
+                 gameState.inventory = gameState.inventory.filter(i => i !== itemToRemove);
+            }
         }
 
 function toggleCombinationMode() {
@@ -380,7 +372,7 @@ function attemptCombination() {
         // const ingredients = recipe.ingredients; // Keep original casing for adding result
         const result = recipe.result;
 
-        const selectedLowercase = gameState.selectedForCombination.map(item => item.toLowerCase());
+        const selectedLowercase = gameState.selectedForCombination.map(item => (item.name || item).toLowerCase());
         const ingredientsLowercase = recipe.ingredients.map(item => item.toLowerCase());
 
         // Check if selected items (converted to lowercase) match the ingredients list (converted to lowercase)
