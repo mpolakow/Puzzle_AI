@@ -43,6 +43,7 @@
                     clothCollected: false,
                     oilCollected: false,
                 },
+                toggledHotspots: {},
                 isCombining: false,
                 selectedForCombination: [],
                 currentAction: "use", // Added for new action mode
@@ -210,9 +211,8 @@
             // New logic for initially hidden hotspots
             if (hsData.initiallyHidden) {
                 const visibilityFlag = `hotspot_${gameState.currentScene}_${hsData.id}_visible`;
-                if (hsData.toggleable === 'once') {
-                    const toggledFlag = `hotspot_${hsData.id}_toggled`;
-                    return !!gameState.flags[visibilityFlag] && !gameState.flags[toggledFlag];
+                if (hsData.toggleable === 'once' && gameState.toggledHotspots[hsData.id]) {
+                    return false;
                 }
                 return !!gameState.flags[visibilityFlag]; // Show if flag is true, otherwise hide
             }

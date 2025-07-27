@@ -93,7 +93,7 @@ const gameScenes = {
                         style: { left: "20%", top: "80%", width: "10%", height: "5%" },
                         objectId: "pick_upchest_chest_key",
                         initiallyHidden: true, // Added this line
-			toggleable: "once"
+                        toggleable: "once"
                     },
                     {
                         id: "pickup_oil",
@@ -287,7 +287,7 @@ const interactiveObjects = {
                         gameState.message = "You pick up the key from the ground. It vanishes after you take it.";
                         addItemToInventory("Chest Key");
                         gameState.flags.keyObtained = true;
-                        gameState.flags.hotspot_chest_key_toggled = true;
+                        gameState.toggledHotspots['chest_key'] = true;
                         // Make the hotspot disappear by resetting its visibility flag
                         gameState.flags.hotspot_Storage_chest_key_visible = false;
                     } else if (gameState.flags.keyObtained) {
