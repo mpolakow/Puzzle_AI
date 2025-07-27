@@ -164,27 +164,35 @@
                             renderMessage();
                         } else if (gameState.currentAction === "use") {
                             if (gameState.selectedItemForUse) {
-                                // Handle using selected item on hotspot
                                 const itemUsed = gameState.selectedItemForUse;
-                                gameState.selectedItemForUse = null; // Reset selected item
-                                // TODO: Implement actual item-on-hotspot interaction logic here.
-                                // This will likely involve checking itemUsed and objectId against a ruleset.
-                                gameState.message = `You try to use ${itemUsed} on ${objectId.replace(/_/g, ' ')}. Nothing specific happens yet.`;
-                                renderMessage();
-                                renderInventory(); // To remove 'selected-for-use' class
-                            } else {
-                                // Handle direct "use" action on hotspot (existing logic)
+                                const originalMessage = gameState.message;
+
                                 if (objectLogic && typeof objectLogic.handler === 'function') {
                                     objectLogic.handler();
-                                    renderMessage();
-                                    renderInventory();
-                                    if (sceneAtInteractionTime === gameScenes[gameState.currentScene]) {
-                                        updateHotspotsForCurrentScene();
-                                    }
+                                }
+
+                                if (objectLogic && objectLogic.requiredItem === itemUsed) {
+                                    removeItemFromInventory(itemUsed);
+                                } else if (originalMessage === gameState.message) {
+                                    gameState.message = `You can't use the ${itemUsed} here.`;
+                                }
+
+                                gameState.selectedItemForUse = null; // Deselect item after use attempt
+                                renderMessage();
+                                renderInventory();
+                                updateHotspotsForCurrentScene();
+                            } else {
+                                // Handle direct "use" action on hotspot (no item selected)
+                                if (objectLogic && typeof objectLogic.handler === 'function') {
+                                    objectLogic.handler();
                                 } else {
                                     console.warn("No handler for objectId:", objectId);
                                     gameState.message = `You try to use ${objectId.replace(/_/g, ' ')}, but nothing happens.`;
-                                    renderMessage();
+                                }
+                                renderMessage();
+                                renderInventory();
+                                if (sceneAtInteractionTime === gameScenes[gameState.currentScene]) {
+                                    updateHotspotsForCurrentScene();
                                 }
                             }
                         } else {
@@ -324,9 +332,6 @@ function toggleItemSelectionForCombination(itemName) {
         }
         function removeItemFromInventory(item) {
             gameState.inventory = gameState.inventory.filter(i => i !== item);
-        }
-        function checkInventory(item) {
-            return gameState.inventory.includes(item);
         }
 
 function toggleCombinationMode() {

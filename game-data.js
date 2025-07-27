@@ -197,11 +197,11 @@ const interactiveObjects = {
             },
             "inspect_ring_hole": {
                 lookDescription: "A curious, perfectly circular indentation in the stone wall, about the size of a large coin. It seems tailor-made for something round.",
+                requiredItem: "Ring",
                 handler: () => {
-                    if (checkInventory("Ring")) {
+                    if (gameState.selectedItemForUse === "Ring") {
                         changeScene("END");
                         gameState.message = "You insert the ring and hear a loud clang. Suddenly the wall slides open in front of you, you go through a long tunnel at which end you see a burning castle. \n\nCongratulations! You've passed the cultist!\n\nThanks for playing!";
-                        removeItemFromInventory("Ring");
                         const existingHotspots = gameArea.querySelectorAll('.hotspot');
                         existingHotspots.forEach(hs => hs.remove());
                         restartButton.style.display = 'inline-block';
@@ -232,10 +232,10 @@ const interactiveObjects = {
                 }
             },
             "inspect_fire_rubble": {
+                requiredItem: "Rake",
                 handler: () => {
-                    if (checkInventory("Rake")) {
+                    if (gameState.selectedItemForUse === "Rake") {
                         gameState.message = "You use the rake to search through the smoldering rubble.";
-                        removeItemFromInventory("Rake");
 			changeScene("Storage");
 			gameState.flags.trapdoor_unlocked = true;
                     } else if (gameState.flags.trapdoor_unlocked) {
@@ -248,10 +248,10 @@ const interactiveObjects = {
             },
             "inspect_chest": {
                 lookDescription: "A heavy wooden chest, bound with iron. It has a prominent, sturdy lock.",
+                requiredItem: "Chest Key",
                 handler: () => {
-                    if (checkInventory("Chest Key")) {
+                    if (gameState.selectedItemForUse === "Chest Key") {
                         gameState.message = "You use the Chest Key and the chest creaks open. You find a shiny ring... whos it might be. As the lock clicks, you hear a faint sound from the trapdoor area in the city."; // Added a bit of narrative flair
-                        removeItemFromInventory("Chest Key");
 	                addItemToInventory("Ring")
 			gameState.flags.chestOpened = true;
                     } else if (gameState.flags.chestOpened) {
@@ -264,11 +264,11 @@ const interactiveObjects = {
                 }
             },
             "inspect_rake": {
+                requiredItem: "Stone",
                 handler: () => {
-                    if (checkInventory("Stone")) {
+                    if (gameState.selectedItemForUse === "Stone") {
                         gameState.message = "You throw the stone feeling lucky and you actually are, the rake fall to the ground and you pick it up.";
 	                addItemToInventory("Rake")
-                        removeItemFromInventory("Stone");
 			gameState.flags.rakeObtained = true;
                     }  else {
                         gameState.message = "The rake is too far up to reach.";
@@ -358,7 +358,7 @@ const interactiveObjects = {
             },
             "pickup_cloth": {
                 handler: () => {
-                    if (!checkInventory("Cloth")) {
+                    if (!gameState.inventory.includes("Cloth")) {
                         gameState.message = "You find a piece of cloth that seems usable.";
                         addItemToInventory("Cloth");
                         gameState.flags.clothCollected = true; // Add flag
@@ -371,7 +371,7 @@ const interactiveObjects = {
             "pickup_oil": {
                 lookDescription: "A small, clay flask with a cork stopper. It seems to contain some kind of liquid.", // Assuming this is the hotspot for picking up oil
                 handler: () => {
-                    if (!checkInventory("Oil")) {
+                    if (!gameState.inventory.includes("Oil")) {
                         gameState.message = "You find a small flask of oil.";
                         addItemToInventory("Oil");
                         gameState.flags.oilCollected = true; // Add flag
@@ -382,8 +382,9 @@ const interactiveObjects = {
             },
             "inspect_dark_area_storage": {
                 lookDescription: "A particularly shadowy corner of the storage room. It's hard to make out any details in the gloom.",
+                requiredItem: "Torch",
                 handler: () => {
-                    if (checkInventory("Torch")) {
+                    if (gameState.selectedItemForUse === "Torch") {
                         gameState.message = "You use the torch to light up the dark area. You see a small, almost invisible inscription on the wall! It reads: 'The path is revealed to those who persist.'";
                         // Potentially remove torch if it's a one-time use for this puzzle
                         // removeItemFromInventory("Torch");
@@ -399,7 +400,7 @@ const interactiveObjects = {
             ,"pickup_cloth": { // This assumes "pickup_cloth" is an objectId for a hotspot
                 lookDescription: "A piece of discarded cloth lying on the ground.",
                 handler: () => {
-                     if (!checkInventory("Cloth")) {
+                     if (!gameState.inventory.includes("Cloth")) {
                         gameState.message = "You find a piece of cloth that seems usable.";
                         addItemToInventory("Cloth");
                         gameState.flags.clothCollected = true;
