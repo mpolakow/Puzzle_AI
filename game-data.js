@@ -145,7 +145,7 @@ const gameScenes = {
         };
 
 const combinationRecipes = {
-    "torch": { "ingredients": ["stick", "cloth", "oil"], "result": "Torch" } // Changed "torch" to "Torch"
+    "torch": { "ingredients": ["stick", "cloth", "oil"], "result": { "name": "Torch", "uses": 3 } }
 };
 
 const itemDescriptions = {
@@ -388,7 +388,7 @@ const interactiveObjects = {
                 lookDescription: "A particularly shadowy corner of the storage room. It's hard to make out any details in the gloom.",
                 requiredItem: "Torch",
                 handler: () => {
-                    if (gameState.selectedItemForUse === "Torch") {
+                    if (gameState.selectedItemForUse && gameState.selectedItemForUse.name === "Torch") {
                         gameState.message = "You use the torch to light up the dark area. You see a small, almost invisible inscription on the wall! It reads: 'The path is revealed to those who persist.'";
                         // Potentially remove torch if it's a one-time use for this puzzle
                         // removeItemFromInventory("Torch");
