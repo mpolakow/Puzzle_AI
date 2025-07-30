@@ -215,6 +215,9 @@
                 if (hsData.toggleable === 'once' && gameState.toggledHotspots[hsData.id]) {
                     return false;
                 }
+                if (typeof hsData.toggleable === 'number' && (gameState.toggledHotspots[hsData.id] || 0) >= hsData.toggleable) {
+                    return false;
+                }
                 return !!gameState.flags[visibilityFlag]; // Show if flag is true, otherwise hide
             }
 
