@@ -16,6 +16,8 @@ function initializeGame() {
     gameState = {
         inventory: [],
         selectedForCombination: [],
+        toggledHotspots: {},
+        flags: {},
     };
 }
 
@@ -66,6 +68,20 @@ function attemptCombination() {
     return combinationMade;
 }
 
+function shouldDisplayHotspot(objectId, hsData) {
+    if (hsData.initiallyHidden) {
+        const visibilityFlag = `hotspot_${gameState.currentScene}_${hsData.id}_visible`;
+        if (hsData.toggleable === 'once' && gameState.toggledHotspots[hsData.id]) {
+            return false;
+        }
+        if (typeof hsData.toggleable === 'number' && (gameState.toggledHotspots[hsData.id] || 0) >= hsData.toggleable) {
+            return false;
+        }
+        return !!gameState.flags[visibilityFlag];
+    }
+    return true;
+}
+
 // Tests
 try {
     // Test 1: Crafting a torch
@@ -94,6 +110,24 @@ try {
     removeItemFromInventory(gameState.inventory[0]);
     assert.strictEqual(gameState.inventory.length, 0, 'Test 4 Failed: Inventory should be empty');
     console.log('Test 4 Passed: Torch removed from inventory');
+
+    // Test 5: Toggleable hotspot
+    initializeGame();
+    gameState.currentScene = 'Storage';
+    gameState.flags.hotspot_Storage_chest_key_visible = true;
+    const hsData = { id: 'chest_key', initiallyHidden: true, toggleable: 2 };
+
+    // First appearance
+    assert.strictEqual(shouldDisplayHotspot('pick_upchest_chest_key', hsData), true, 'Test 5.1 Failed: Hotspot should be visible');
+
+    // First interaction
+    gameState.toggledHotspots['chest_key'] = (gameState.toggledHotspots['chest_key'] || 0) + 1;
+    assert.strictEqual(shouldDisplayHotspot('pick_upchest_chest_key', hsData), true, 'Test 5.2 Failed: Hotspot should still be visible');
+
+    // Second interaction
+    gameState.toggledHotspots['chest_key'] = (gameState.toggledHotspots['chest_key'] || 0) + 1;
+    assert.strictEqual(shouldDisplayHotspot('pick_upchest_chest_key', hsData), false, 'Test 5.3 Failed: Hotspot should be hidden');
+    console.log('Test 5 Passed: Toggleable hotspot logic is correct');
 
     console.log('All tests passed!');
 } catch (error) {
