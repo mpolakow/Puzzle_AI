@@ -40,7 +40,7 @@ const gameScenes = {
 		           objectId: "gate_exit" },
                     { id: "map",
 			   style: { left: "5%", top: "80%", width: "5%", height: "20%" },
-		           objectId: "inspect_map",
+		           objectId: "inspect_map" },
 		    { id: "map_Exit",
                            imageUrl: "https://ai.oldwisebear.com/Game1/map.png",
 			   style: { left: "2%", top: "35%", width: "10%", height: "10%" },

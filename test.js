@@ -62,7 +62,7 @@ addItemToInventory("Stick");
 addItemToInventory("Cloth");
 addItemToInventory("Oil");
 toggleCombinationMode();
-gameState.selectedForCombination = context.gameState.inventory.slice();
+context.gameState.selectedForCombination = context.gameState.inventory.slice();
 attemptCombination();
 console.log(JSON.stringify(context.gameState.inventory));
 
