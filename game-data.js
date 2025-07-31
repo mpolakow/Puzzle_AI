@@ -173,7 +173,6 @@ const interactiveObjects = {
                     addItemToInventory("Map");
                     gameState.message = "You exit the cell slowly, hearing some voices in the distance.";
 		    gameState.flags.MapObtained = true;
-                    gameState.toggledHotspots['map_Exit'] = true;
                     gameState.flags.hotspot_Cell_row_map_Exit_visible = true;		
                 }
             },
