@@ -1,46 +1,52 @@
 const gameScenes = {
             "Gate": {
-                imageUrl: "https://ai.oldwisebear.com/Game1/Gate.jpg",
-                message: "You stand in front of the castle gate finally, however there is noone outside... why?.",
+                imageUrl: "https://ai.oldwisebear.com/Game2/Images/Cell.jpg",
+                message: "You stand in a damp cell, somewhere underground.",
                 hotspots: [
                     {
-                        id: "gate_rubble",
-                        style: { left: "75%", top: "65%", width: "20%", height: "25%" },
-                        objectId: "inspect_rubble"
+                        id: "gate_torch",
+                        style: { left: "75%", top: "30%", width: "5%", height: "15%" },
+                        objectId: "inspect_torch"
                     },
                     {
                         id: "gate_entrance",
-                        style: { left: "20%", top: "60%", width: "15%", height: "25%" },
+                        style: { left: "33%", top: "30%", width: "35%", height: "40%" },
                         objectId: "gate_entrance"
+                    },
+                    {
+                        id: "gate_stone",
+                        style: { left: "85%", top: "70%", width: "10%", height: "5%" },
+                        objectId: "inspect_stone"
                     }
+
                 ]
             },
-            "City": {
-                imageUrl: "https://ai.oldwisebear.com/Game1/background_image.jpg",
-                message: "You come into a city and notice it was burned down not that long ago. She has to be somewhere here...",
+            "Cell_row": {
+                imageUrl: "https://ai.oldwisebear.com/Game2/Images/cell_row3.jpg",
+                message: "You come out of the cell a hide behind some boxes.",
                 hotspots: [
-                    { id: "house",
-			   style: { left: "30%", top: "55%", width: "25%", height: "15%" },
-			   objectId: "enter_house" },
-                    { id: "Cultist_leader",
-                           imageUrl: "https://ai.oldwisebear.com/Game1/Cultist_horse.png",
-			   style: { left: "35%", top: "40%", width: "10%", height: "10%" },
-			   objectId: "talk_to_cultist_leader" },
-                    { id: "Cultist1",
-                           imageUrl: "https://ai.oldwisebear.com/Game1/Cultist2.png",
-			   style: { left: "70%", top: "40%", width: "10%", height: "10%" },
+                    { id: "cell_skeleton",
+			   style: { left: "25%", top: "30%", width: "18%", height: "25%" },
+			   objectId: "inspect_skeleton" },
+                    { id: "Cultists",
+			   style: { left: "58%", top: "30%", width: "17%", height: "25%" },
 			   objectId: "talk_to_cultist" },
-                    { id: "Cultist2",
+                    { id: "empty_cell",
                            imageUrl: "https://ai.oldwisebear.com/Game1/Cultist2.png",
-			   style: { left: "55%", top: "80%", width: "10%", height: "10%" },
+			   style: { left: "85%", top: "30%", width: "15%", height: "25%" },
 			   objectId: "talk_to_cultist" },
-                    { id: "gate_exit",
-			   style: { left: "10%", top: "80%", width: "15%", height: "15%" },
+                    { id: "bucket",
+			   style: { left: "45%", top: "52%", width: "10%", height: "10%" },
 		           objectId: "gate_exit" },
-		    { id: "fire_rubble",
-                           imageUrl: "https://ai.oldwisebear.com/Game1/Wooden_ruble.png",
-			   style: { left: "5%", top: "50%", width: "10%", height: "10%" },
-			   objectId: "inspect_fire_rubble" }
+                    { id: "map",
+			   style: { left: "5%", top: "80%", width: "5%", height: "20%" },
+		           objectId: "inspect_map",
+		    { id: "map_Exit",
+                           imageUrl: "https://ai.oldwisebear.com/Game1/map.png",
+			   style: { left: "2%", top: "35%", width: "10%", height: "10%" },
+			   objectId: "cell_row_exit", 
+                           initiallyHidden: true, // Added this line
+                           toggleable: "once" }
                 ]
             },
             "House": {
@@ -93,7 +99,7 @@ const gameScenes = {
                         style: { left: "20%", top: "80%", width: "10%", height: "5%" },
                         objectId: "pick_upchest_chest_key",
                         initiallyHidden: true, // Added this line
-                        toggleable: 2
+                        toggleable: "once"
                     },
                     {
                         id: "pickup_oil",
@@ -145,29 +151,33 @@ const gameScenes = {
         };
 
 const combinationRecipes = {
-    "torch": { "ingredients": ["stick", "cloth", "oil"], "result": { "name": "Torch", "uses": 3 } }
+    //example "torch": { "ingredients": ["stick", "cloth", "oil"], "result": { "name": "Torch", "uses": 3 } }
 };
 
 const itemDescriptions = {
-    "Stone": "A rough, grey stone. It has a nice weight to it, good for throwing perhaps?",
-    "Stick": "A sturdy wooden stick, about the length of your forearm.",
-    "Rake": "A long-handled rake with several metal tines. Looks useful for clearing debris.",
-    "Cloth": "A piece of thick, absorbent cloth. It's a bit grimy.",
-    "Oil": "A small flask containing a viscous, flammable oil.",
-    "Torch": "A stick with oil-soaked cloth wrapped around one end. Ready to be lit.",
-    "Chest Key": "A small, ornate metal key. Seems designed for a chest.",
-    "Ring": "A beautiful, intricately carved ring. It feels warm to the touch."
+    // example "Stone": "A rough, grey stone. It has a nice weight to it, good for throwing perhaps?",
     // Add more items as they are introduced to the game
 };
 
 const interactiveObjects = {
             "gate_entrance": {
-                lookDescription: "A massive, ancient-looking gate made of dark wood and reinforced with iron bands. It appears to be the only way into whatever lies beyond.",
+                lookDescription: "A massive, ancient-looking gate closed with steel bars, that are already rusted",
                 handler: () => {
-                    changeScene("City");
-                    gameState.message = "You enter the city slowly, not knowing what's inside.";
+                    changeScene("Cell_row");
+                    gameState.message = "You exit the cell slowly, hearing some voices in the distance.";
                 }
             },
+            "inspect_map": {
+                lookDescription: "Something rolled up and tucked between the boxes ",
+                handler: () => {
+                    addItemToInventory("Map");
+                    gameState.message = "You exit the cell slowly, hearing some voices in the distance.";
+		    gameState.flags.MapObtained = true;
+                    gameState.toggledHotspots['map_Exit'] = true;
+                    gameState.flags.hotspot_Cell_row_map_Exit_visible = true;		
+                }
+            },
+
             "enter_house": {
                 lookDescription: "A dilapidated, two-story wooden house. Smoke damage is visible around the windows, and the front door hangs precariously on one hinge.",
                 handler: () => {
@@ -287,7 +297,7 @@ const interactiveObjects = {
                         gameState.message = "You pick up the key from the ground. It vanishes after you take it.";
                         addItemToInventory("Chest Key");
                         gameState.flags.keyObtained = true;
-                        gameState.toggledHotspots['chest_key'] = (gameState.toggledHotspots['chest_key'] || 0) + 1;
+                        gameState.toggledHotspots['chest_key'] = true;
                         // Make the hotspot disappear by resetting its visibility flag
                         gameState.flags.hotspot_Storage_chest_key_visible = false;
                     } else if (gameState.flags.keyObtained) {
