@@ -40,7 +40,7 @@ const gameScenes = {
 		           objectId: "gate_exit" },
                     { id: "map",
 			   style: { left: "5%", top: "80%", width: "5%", height: "20%" },
-		           objectId: "inspect_map",
+		           objectId: "inspect_map" },
 		    { id: "map_Exit",
                            imageUrl: "https://ai.oldwisebear.com/Game1/map.png",
 			   style: { left: "2%", top: "35%", width: "10%", height: "10%" },
@@ -173,7 +173,6 @@ const interactiveObjects = {
                     addItemToInventory("Map");
                     gameState.message = "You exit the cell slowly, hearing some voices in the distance.";
 		    gameState.flags.MapObtained = true;
-                    gameState.toggledHotspots['map_Exit'] = true;
                     gameState.flags.hotspot_Cell_row_map_Exit_visible = true;		
                 }
             },
