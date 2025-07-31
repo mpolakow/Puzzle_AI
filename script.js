@@ -30,19 +30,10 @@
                 currentScene: "Gate",
                 inventory: [],
                 flags: {
-                    hasExitKey: false,
-                    exitDoorUnlocked: false,
-                    trapdoor_unlocked: false,
-                    stoneCollected: false,
-                    chestOpened: false,
-                    keyObtained: false,
-		    rakeObtained: false,
-		    CultistAnnoyance: 0, // ADDED: To track mood
-		    CultistLeaderAnnoyance: 0, // ADDED: To track mood
-                    stickCollected: false,
-                    clothCollected: false,
-                    oilCollected: false,
-                },
+			MapObtained: false,	
+                    //hasExitKey: false,
+		    //CultistAnnoyance: 0, // ADDED: To track mood
+		                    },
                 toggledHotspots: {},
                 isCombining: false,
                 selectedForCombination: [],
@@ -223,7 +214,7 @@
 
             // Existing logic for hotspots that disappear after interaction
             // These apply to hotspots that are NOT initiallyHidden
-            if (objectId === "pickup_red_flower" && gameState.flags.redFlowerTaken) return false;
+            if (objectId === "inspect_map" && gameState.flags.MapObtained) return false;
             if (objectId === "inspect_rake" && gameState.flags.rakeObtained) return false;
             // If pick_upchest_chest_key is NOT initiallyHidden, this rule would apply.
             // Given it's currently set to initiallyHidden: true for testing,
