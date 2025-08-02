@@ -30,9 +30,17 @@
                 currentScene: "Gate",
                 inventory: [],
                 flags: {
-			MapObtained: false,	
+			MapObtained: false,
+			ChainOpened: false,
+			keyObtained: false,
+			BedPressed: false,
+			MechanismSolved: false,
+			Torch1: false,
+			Torch2: false,
                     //hasExitKey: false,
-		    //CultistAnnoyance: 0, // ADDED: To track mood
+		    	BedSearch: 0,
+			CultistMobAnnoyance: 0,
+		    	CultistAnnoyance: 0, // ADDED: To track mood
 		                    },
                 toggledHotspots: {},
                 isCombining: false,
@@ -215,7 +223,9 @@
             // Existing logic for hotspots that disappear after interaction
             // These apply to hotspots that are NOT initiallyHidden
             if (objectId === "inspect_map" && gameState.flags.MapObtained) return false;
-            if (objectId === "inspect_rake" && gameState.flags.rakeObtained) return false;
+            if (objectId === "torture_exit_nomap" && gameState.flags.MapObtained) return false;
+            if (objectId === "inspect_chain" && gameState.flags.ChainOpened) return false;
+            if (objectId === "pick_chain_key" && gameState.flags.keyObtained && !hsData.initiallyHidden) return false;
             // If pick_upchest_chest_key is NOT initiallyHidden, this rule would apply.
             // Given it's currently set to initiallyHidden: true for testing,
             // its visibility is governed by the block above.
