@@ -215,8 +215,8 @@
                 if (gameState.flags.tortureSequenceActive) {
                     return objectId === 'inspect_chest';
                 }
-                if (gameState.flags.tortureSequenceFinished) {
-                    return objectId !== 'activate_torture_device';
+                if (gameState.flags.tortureSequenceFinished && objectId === 'activate_torture_device') {
+                    return false;
                 }
             }
             // New logic for initially hidden hotspots
