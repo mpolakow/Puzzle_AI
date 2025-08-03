@@ -18,7 +18,9 @@ function initializeGame() {
         selectedForCombination: [],
         toggledHotspots: {},
         flags: {
-            tortureSequenceCompleted: false,
+            tortureSequenceActive: false,
+            tortureSequenceFinished: false,
+            playerIsHiding: false,
         },
     };
 }
@@ -81,9 +83,12 @@ function shouldDisplayHotspot(objectId, hsData) {
         }
         return !!gameState.flags[visibilityFlag];
     }
-    if (gameState.currentScene === 'Torture_chamber' && gameState.flags.tortureSequenceCompleted) {
-        if (objectId !== 'inspect_chest') {
-            return false;
+    if (gameState.currentScene === 'Torture_chamber') {
+        if (gameState.flags.tortureSequenceActive) {
+            return objectId === 'inspect_chest';
+        }
+        if (gameState.flags.tortureSequenceFinished) {
+            return objectId !== 'activate_torture_device';
         }
     }
     return true;
@@ -139,13 +144,17 @@ try {
     // Test 6: Torture chamber event
     initializeGame();
     gameState.currentScene = 'Torture_chamber';
-    gameState.flags.tortureSequenceCompleted = false;
     assert.strictEqual(shouldDisplayHotspot('inspect_chest', {}), true, 'Test 6.1 Failed: Chest should be visible initially');
     assert.strictEqual(shouldDisplayHotspot('activate_torture_device', {}), true, 'Test 6.2 Failed: Torture device should be visible initially');
 
-    gameState.flags.tortureSequenceCompleted = true;
-    assert.strictEqual(shouldDisplayHotspot('inspect_chest', {}), true, 'Test 6.3 Failed: Chest should be visible after event');
-    assert.strictEqual(shouldDisplayHotspot('activate_torture_device', {}), false, 'Test 6.4 Failed: Torture device should be hidden after event');
+    gameState.flags.tortureSequenceActive = true;
+    assert.strictEqual(shouldDisplayHotspot('inspect_chest', {}), true, 'Test 6.3 Failed: Chest should be visible during sequence');
+    assert.strictEqual(shouldDisplayHotspot('activate_torture_device', {}), false, 'Test 6.4 Failed: Torture device should be hidden during sequence');
+
+    gameState.flags.tortureSequenceActive = false;
+    gameState.flags.tortureSequenceFinished = true;
+    assert.strictEqual(shouldDisplayHotspot('inspect_chest', {}), true, 'Test 6.5 Failed: Chest should be visible after sequence');
+    assert.strictEqual(shouldDisplayHotspot('activate_torture_device', {}), false, 'Test 6.6 Failed: Torture device should be hidden after sequence');
     console.log('Test 6 Passed: Torture chamber event logic is correct');
 
     console.log('All tests passed!');

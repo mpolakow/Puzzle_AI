@@ -709,6 +709,13 @@ const interactiveObjects = {
                 lookDescription: "A heavy wooden chest, bound with iron. It has a prominent, sturdy lock.",
                 requiredItem: "Chest Key",
                 handler: () => {
+                    if (gameState.flags.tortureSequenceActive) {
+                        gameState.flags.playerIsHiding = true;
+                        gameState.message = "You quickly jump into the chest and close the lid.";
+                        renderMessage();
+                        return;
+                    }
+
                     if (gameState.selectedItemForUse === "Chest Key") {
                         gameState.message = "You use the Chest Key and the chest creaks open. You find a shiny ring... whos it might be. As the lock clicks, you hear a faint sound from the trapdoor area in the city."; // Added a bit of narrative flair
 	                addItemToInventory("Ring")
@@ -793,10 +800,22 @@ const interactiveObjects = {
             "activate_torture_device": {
                 lookDescription: "A menacing-looking device. You're not sure you want to know how it works.",
                 handler: () => {
-                    gameState.flags.tortureSequenceCompleted = true;
-                    gameState.message = "You touch the device. A loud grinding noise echoes, and all the details of the room fade into darkness for a moment...";
+                    gameState.flags.tortureSequenceActive = true;
                     updateHotspotsForCurrentScene();
+                    gameState.message = "You touch the device. A loud grinding noise echoes, and the room goes dark. You have a few seconds to hide!";
                     renderMessage();
+
+                    setTimeout(() => {
+                        if (gameState.flags.playerIsHiding) {
+                            gameState.flags.tortureSequenceActive = false;
+                            gameState.flags.tortureSequenceFinished = true;
+                            gameState.message = "You peek out from the chest. The room is quiet again, but some things have changed.";
+                            updateHotspotsForCurrentScene();
+                            renderMessage();
+                        } else {
+                            changeScene("Bad_end");
+                        }
+                    }, 5000); // 5-second delay
                 }
             }
             // TODO: Add lookDescription for "pickup_cloth" if it's a distinct hotspot.

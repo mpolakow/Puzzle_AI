@@ -41,7 +41,9 @@
 		    	BedSearch: 0,
 			CultistMobAnnoyance: 0,
 		    	CultistAnnoyance: 0, // ADDED: To track mood
-			tortureSequenceCompleted: false,
+			tortureSequenceActive: false,
+			tortureSequenceFinished: false,
+			playerIsHiding: false,
 		                    },
                 toggledHotspots: {},
                 isCombining: false,
@@ -235,11 +237,14 @@
             if (objectId === "pickup_cloth" && gameState.flags.clothCollected) return false;
             if (objectId === "pickup_oil" && gameState.flags.oilCollected) return false;
 
-	    if (gameState.currentScene === 'Torture_chamber' && gameState.flags.tortureSequenceCompleted) {
-		if (objectId !== 'inspect_chest') {
-		    return false;
-		}
-	    }
+            if (gameState.currentScene === 'Torture_chamber') {
+                if (gameState.flags.tortureSequenceActive) {
+                    return objectId === 'inspect_chest';
+                }
+                if (gameState.flags.tortureSequenceFinished) {
+                    return objectId !== 'activate_torture_device';
+                }
+            }
 
             return true; // Default to show if no other rules hide it
         }
