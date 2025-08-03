@@ -793,15 +793,10 @@ const interactiveObjects = {
             "activate_torture_device": {
                 lookDescription: "A menacing-looking device. You're not sure you want to know how it works.",
                 handler: () => {
+                    gameState.flags.tortureSequenceCompleted = true;
                     gameState.message = "You touch the device. A loud grinding noise echoes, and all the details of the room fade into darkness for a moment...";
+                    updateHotspotsForCurrentScene();
                     renderMessage();
-
-                    setTimeout(() => {
-                        gameState.flags.tortureSequenceCompleted = true;
-                        gameState.message = "After a few tense seconds, your eyes adjust. Some things have shifted.";
-                        updateHotspotsForCurrentScene();
-                        renderMessage();
-                    }, 3000); // 3-second delay
                 }
             }
             // TODO: Add lookDescription for "pickup_cloth" if it's a distinct hotspot.
