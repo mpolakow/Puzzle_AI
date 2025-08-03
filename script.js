@@ -42,7 +42,6 @@
 			CultistMobAnnoyance: 0,
 		    	CultistAnnoyance: 0, // ADDED: To track mood
 			tortureSequenceCompleted: false,
-			hideAllHotspots: false,
 		                    },
                 toggledHotspots: {},
                 isCombining: false,
@@ -124,10 +123,6 @@
 
             const existingHotspots = gameArea.querySelectorAll('.hotspot');
             existingHotspots.forEach(hs => hs.remove());
-
-            if (gameState.flags.hideAllHotspots) {
-                return;
-            }
 
             scene.hotspots.forEach(hsData => {
                  if (shouldDisplayHotspot(hsData.objectId, hsData)) {
@@ -239,8 +234,9 @@
             if (objectId === "pick_upchest_chest_key" && gameState.flags.keyObtained && !hsData.initiallyHidden) return false;
             if (objectId === "pickup_cloth" && gameState.flags.clothCollected) return false;
             if (objectId === "pickup_oil" && gameState.flags.oilCollected) return false;
+
 	    if (gameState.currentScene === 'Torture_chamber' && gameState.flags.tortureSequenceCompleted) {
-		if (objectId === 'inspect_chest' || objectId === 'activate_torture_device') {
+		if (objectId !== 'inspect_chest') {
 		    return false;
 		}
 	    }

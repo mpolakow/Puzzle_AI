@@ -18,7 +18,7 @@ function initializeGame() {
         selectedForCombination: [],
         toggledHotspots: {},
         flags: {
-            hideAllHotspots: false,
+            tortureSequenceCompleted: false,
         },
     };
 }
@@ -81,13 +81,11 @@ function shouldDisplayHotspot(objectId, hsData) {
         }
         return !!gameState.flags[visibilityFlag];
     }
-
     if (gameState.currentScene === 'Torture_chamber' && gameState.flags.tortureSequenceCompleted) {
-        if (objectId === 'inspect_chest' || objectId === 'activate_torture_device') {
+        if (objectId !== 'inspect_chest') {
             return false;
         }
     }
-
     return true;
 }
 
@@ -146,7 +144,7 @@ try {
     assert.strictEqual(shouldDisplayHotspot('activate_torture_device', {}), true, 'Test 6.2 Failed: Torture device should be visible initially');
 
     gameState.flags.tortureSequenceCompleted = true;
-    assert.strictEqual(shouldDisplayHotspot('inspect_chest', {}), false, 'Test 6.3 Failed: Chest should be hidden after event');
+    assert.strictEqual(shouldDisplayHotspot('inspect_chest', {}), true, 'Test 6.3 Failed: Chest should be visible after event');
     assert.strictEqual(shouldDisplayHotspot('activate_torture_device', {}), false, 'Test 6.4 Failed: Torture device should be hidden after event');
     console.log('Test 6 Passed: Torture chamber event logic is correct');
 
