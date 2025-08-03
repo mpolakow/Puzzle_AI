@@ -31,19 +31,27 @@
                 inventory: [],
                 flags: {
 			MapObtained: false,
+			OliveObtained: false,
+			OliveUsed: false,
 			ChainOpened: false,
 			keyObtained: false,
+			GreenLiquid: false,
+			BucketFished: false,
+			SkeletonFished: false,
+			chestsearched: false,
 			BedPressed: false,
 			MechanismSolved: false,
 			Torch1: false,
 			Torch2: false,
-                    //hasExitKey: false,
-		    	BedSearch: 0,
-			CultistMobAnnoyance: 0,
-		    	CultistAnnoyance: 0, // ADDED: To track mood
 			tortureSequenceActive: false,
 			tortureSequenceFinished: false,
 			playerIsHiding: false,
+		    	BedSearch: 0,
+		    	Bed2Search: 0,
+			FishingSkills: 0,
+			CultistMobAnnoyance: 0,
+			CultistClosingIn: 0,
+		    	CultistAnnoyance: 0, // ADDED: To track mood
 		                    },
                 toggledHotspots: {},
                 isCombining: false,
@@ -115,6 +123,11 @@
             }
             renderMessage();
         }
+
+	function removeAllHotspots() {
+            const existingHotspots = gameArea.querySelectorAll('.hotspot');
+            existingHotspots.forEach(hs => hs.remove());
+	}
 
         function updateHotspotsForCurrentScene() {
             const scene = gameScenes[gameState.currentScene];
@@ -211,6 +224,7 @@
         }
 
         function shouldDisplayHotspot(objectId, hsData) {
+            // New logic for initially hidden hotspots
             if (gameState.currentScene === 'Torture_chamber') {
                 if (gameState.flags.tortureSequenceActive) {
                     return objectId === 'inspect_chest';
@@ -219,7 +233,6 @@
                     return false;
                 }
             }
-            // New logic for initially hidden hotspots
             if (hsData.initiallyHidden) {
                 const visibilityFlag = `hotspot_${gameState.currentScene}_${hsData.id}_visible`;
                 if (hsData.toggleable === 'once' && gameState.toggledHotspots[hsData.id]) {
@@ -234,6 +247,7 @@
             // Existing logic for hotspots that disappear after interaction
             // These apply to hotspots that are NOT initiallyHidden
             if (objectId === "inspect_map" && gameState.flags.MapObtained) return false;
+            if (objectId === "inspect_olive" && gameState.flags.OliveObtained) return false;
             if (objectId === "torture_exit_nomap" && gameState.flags.MapObtained) return false;
             if (objectId === "inspect_chain" && gameState.flags.ChainOpened) return false;
             if (objectId === "pick_chain_key" && gameState.flags.keyObtained && !hsData.initiallyHidden) return false;
@@ -244,7 +258,7 @@
             if (objectId === "pick_upchest_chest_key" && gameState.flags.keyObtained && !hsData.initiallyHidden) return false;
             if (objectId === "pickup_cloth" && gameState.flags.clothCollected) return false;
             if (objectId === "pickup_oil" && gameState.flags.oilCollected) return false;
-
+            if (objectId === "talk_cultis_mob" && gameState.flags.tortureSequenceFinished) return false;
             return true; // Default to show if no other rules hide it
         }
 
@@ -405,7 +419,7 @@ function attemptCombination() {
             });
             addItemToInventory(recipe.result); // recipe.result provides the casing for the new item.
 
-            gameState.message = `Successfully combined items to create: ${recipe.result}!`;
+            gameState.message = `Successfully combined items to create: ${recipe.result.name}!`;
             combinationMade = true;
             break;
         }
