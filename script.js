@@ -211,6 +211,14 @@
         }
 
         function shouldDisplayHotspot(objectId, hsData) {
+            if (gameState.currentScene === 'Torture_chamber') {
+                if (gameState.flags.tortureSequenceActive) {
+                    return objectId === 'inspect_chest';
+                }
+                if (gameState.flags.tortureSequenceFinished) {
+                    return objectId !== 'activate_torture_device';
+                }
+            }
             // New logic for initially hidden hotspots
             if (hsData.initiallyHidden) {
                 const visibilityFlag = `hotspot_${gameState.currentScene}_${hsData.id}_visible`;
@@ -236,15 +244,6 @@
             if (objectId === "pick_upchest_chest_key" && gameState.flags.keyObtained && !hsData.initiallyHidden) return false;
             if (objectId === "pickup_cloth" && gameState.flags.clothCollected) return false;
             if (objectId === "pickup_oil" && gameState.flags.oilCollected) return false;
-
-            if (gameState.currentScene === 'Torture_chamber') {
-                if (gameState.flags.tortureSequenceActive) {
-                    return objectId === 'inspect_chest';
-                }
-                if (gameState.flags.tortureSequenceFinished) {
-                    return objectId !== 'activate_torture_device';
-                }
-            }
 
             return true; // Default to show if no other rules hide it
         }

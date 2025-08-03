@@ -150,11 +150,13 @@ try {
     gameState.flags.tortureSequenceActive = true;
     assert.strictEqual(shouldDisplayHotspot('inspect_chest', {}), true, 'Test 6.3 Failed: Chest should be visible during sequence');
     assert.strictEqual(shouldDisplayHotspot('activate_torture_device', {}), false, 'Test 6.4 Failed: Torture device should be hidden during sequence');
+    assert.strictEqual(shouldDisplayHotspot('map_Exit', { initiallyHidden: true }), false, 'Test 6.5 Failed: Map exit should be hidden during sequence');
+
 
     gameState.flags.tortureSequenceActive = false;
     gameState.flags.tortureSequenceFinished = true;
-    assert.strictEqual(shouldDisplayHotspot('inspect_chest', {}), true, 'Test 6.5 Failed: Chest should be visible after sequence');
-    assert.strictEqual(shouldDisplayHotspot('activate_torture_device', {}), false, 'Test 6.6 Failed: Torture device should be hidden after sequence');
+    assert.strictEqual(shouldDisplayHotspot('inspect_chest', {}), true, 'Test 6.6 Failed: Chest should be visible after sequence');
+    assert.strictEqual(shouldDisplayHotspot('activate_torture_device', {}), false, 'Test 6.7 Failed: Torture device should be hidden after sequence');
     console.log('Test 6 Passed: Torture chamber event logic is correct');
 
     console.log('All tests passed!');
