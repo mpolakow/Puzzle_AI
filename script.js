@@ -41,6 +41,9 @@
 		    	BedSearch: 0,
 			CultistMobAnnoyance: 0,
 		    	CultistAnnoyance: 0, // ADDED: To track mood
+			tortureSequenceActive: false,
+			tortureSequenceFinished: false,
+			playerIsHiding: false,
 		                    },
                 toggledHotspots: {},
                 isCombining: false,
@@ -208,6 +211,14 @@
         }
 
         function shouldDisplayHotspot(objectId, hsData) {
+            if (gameState.currentScene === 'Torture_chamber') {
+                if (gameState.flags.tortureSequenceActive) {
+                    return objectId === 'inspect_chest';
+                }
+                if (gameState.flags.tortureSequenceFinished && objectId === 'activate_torture_device') {
+                    return false;
+                }
+            }
             // New logic for initially hidden hotspots
             if (hsData.initiallyHidden) {
                 const visibilityFlag = `hotspot_${gameState.currentScene}_${hsData.id}_visible`;
