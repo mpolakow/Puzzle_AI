@@ -42,6 +42,7 @@
 			CultistMobAnnoyance: 0,
 		    	CultistAnnoyance: 0, // ADDED: To track mood
 			tortureSequenceCompleted: false,
+			hideAllHotspots: false,
 		                    },
                 toggledHotspots: {},
                 isCombining: false,
@@ -114,11 +115,6 @@
             renderMessage();
         }
 
-	function removeAllHotspots() {
-            const existingHotspots = gameArea.querySelectorAll('.hotspot');
-            existingHotspots.forEach(hs => hs.remove());
-	}
-
         function updateHotspotsForCurrentScene() {
             const scene = gameScenes[gameState.currentScene];
             if (!scene) {
@@ -128,6 +124,10 @@
 
             const existingHotspots = gameArea.querySelectorAll('.hotspot');
             existingHotspots.forEach(hs => hs.remove());
+
+            if (gameState.flags.hideAllHotspots) {
+                return;
+            }
 
             scene.hotspots.forEach(hsData => {
                  if (shouldDisplayHotspot(hsData.objectId, hsData)) {

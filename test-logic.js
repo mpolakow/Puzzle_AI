@@ -17,7 +17,9 @@ function initializeGame() {
         inventory: [],
         selectedForCombination: [],
         toggledHotspots: {},
-        flags: {},
+        flags: {
+            hideAllHotspots: false,
+        },
     };
 }
 
@@ -142,6 +144,7 @@ try {
     gameState.flags.tortureSequenceCompleted = false;
     assert.strictEqual(shouldDisplayHotspot('inspect_chest', {}), true, 'Test 6.1 Failed: Chest should be visible initially');
     assert.strictEqual(shouldDisplayHotspot('activate_torture_device', {}), true, 'Test 6.2 Failed: Torture device should be visible initially');
+
     gameState.flags.tortureSequenceCompleted = true;
     assert.strictEqual(shouldDisplayHotspot('inspect_chest', {}), false, 'Test 6.3 Failed: Chest should be hidden after event');
     assert.strictEqual(shouldDisplayHotspot('activate_torture_device', {}), false, 'Test 6.4 Failed: Torture device should be hidden after event');
