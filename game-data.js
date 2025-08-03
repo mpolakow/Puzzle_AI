@@ -38,7 +38,7 @@ const gameScenes = {
                 hotspots: [
                     { id: "cell_skeleton",
 			   style: { left: "25%", top: "30%", width: "18%", height: "25%" },
-			   objectId: "inspect_skeleton" }, //TODO
+			   objectId: "inspect_skeleton" }, 
                     { id: "Cultists",
 			   style: { left: "58%", top: "30%", width: "17%", height: "25%" },
 			   objectId: "talk_to_cultist" }, 
@@ -48,7 +48,7 @@ const gameScenes = {
 			   objectId: "talk_to_cultist" }, //TODO
                     { id: "bucket",
 			   style: { left: "45%", top: "52%", width: "10%", height: "10%" },
-		           objectId: "gate_exit" }, //TODO
+		           objectId: "inspect_bucket" }, 
                     { id: "map",
 			   imageUrl: "https://ai.oldwisebear.com/Game2/Images/rolled_map2.png",
 			   style: { left: "5%", top: "80%", width: "5%", height: "20%" },
@@ -78,14 +78,14 @@ const gameScenes = {
                     },
                     {
                         id: "chain",
-                        imageUrl: "https://ai.oldwisebear.com/Game1/rake.png", //To change
+                        imageUrl: "https://ai.oldwisebear.com/Game2/Images/Rod.png", 
                         style: { left: "31%", top: "30%", width: "5%", height: "10%" },
                         objectId: "inspect_chain" 
                     },
                     {
                         id: "torture_device",
                         style: { left: "35%", top: "60%", width: "25%", height: "20%" },
-                        objectId: "activate_torture_device"
+                        objectId: "activate_torture_device" //TODO
                     },
 		    { 
 			id: "map_Exit",
@@ -150,18 +150,22 @@ const gameScenes = {
                 message: "You arrive dusty storage room with big cauldron in which someone was doing something not so long ago..",
                 hotspots: [
                     {
-                        id: "stairs_map",
-                        //imageUrl: "https://ai.oldwisebear.com/Game2/Images/map_stairs.png",
-                        style: { left: "37%", top: "59%", width: "20%", height: "20%" },
-                        objectId: "exit_end_g", //TODO
-                        initiallyHidden: true, // Added this line
-                        toggleable: "once" 
+                        id: "recepie",
+                        imageUrl: "https://ai.oldwisebear.com/Game2/Images/recepie.png",
+                        style: { left: "1%", top: "50%", width: "10%", height: "15%" },
+                        objectId: "inspect_recepie" 
+                    },
+                    {
+                        id: "lever",
+                        imageUrl: "https://ai.oldwisebear.com/Game2/Images/lever.png",
+                        style: { left: "15%", top: "65%", width: "10%", height: "25%" },
+                        objectId: "inspect_lever" 
                     },
                     {
                         id: "cauldron",
                         imageUrl: "https://ai.oldwisebear.com/Game2/Images/cauldron.png",
                         style: { left: "45%", top: "60%", width: "20%", height: "20%" },
-                        objectId: "talk_cultis_mob"  //TODO
+                        objectId: "inspect_cauldron"  
                     },
                     {
                         id: "map_exit",
@@ -172,7 +176,6 @@ const gameScenes = {
 
                 ]
             },
-
             "Stairs": {
                 imageUrl: "https://ai.oldwisebear.com/Game2/Images/Stairs.png",
                 message: "You arrive at the foot of the stair to the exit, however a cultist mob is in your way...",
@@ -180,7 +183,7 @@ const gameScenes = {
                     {
                         id: "stairs_map",
                         //imageUrl: "https://ai.oldwisebear.com/Game2/Images/map_stairs.png",
-                        style: { left: "37%", top: "59%", width: "20%", height: "20%" },
+                        style: { left: "37%", top: "59%", width: "20%", height: "40%" },
                         objectId: "exit_end_g", //TODO
                         initiallyHidden: true, // Added this line
                         toggleable: "once" 
@@ -208,19 +211,19 @@ const gameScenes = {
                         id: "bed1",
 			//imageUrl: "https://ai.oldwisebear.com/Game2/Images/map_torture.png",
                         style: { left: "50%", top: "30%", width: "10%", height: "10%" },
-                        objectId: "exit_map_torture" //TODO
+                        objectId: "search_the_bed" 
                     },
                     {
                         id: "bed2",
                         //imageUrl: "https://ai.oldwisebear.com/Game2/Images/map_stairs.png",
                         style: { left: "30%", top: "35%", width: "15%", height: "5%" },
-                        objectId: "exit_map_stairs" //TODO
+                        objectId: "search_the_a_bed" 
                     },
                     {
                         id: "bed3",
                         //imageUrl: "https://ai.oldwisebear.com/Game2/Images/map_stairs.png",
                         style: { left: "15%", top: "50%", width: "20%", height: "5%" },
-                        objectId: "exit_map_stairs" //TODO
+                        objectId: "search_the_bed" 
                     },
                     {
                         id: "map_exit",
@@ -232,19 +235,19 @@ const gameScenes = {
                         id: "bed4",
                         //imageUrl: "https://ai.oldwisebear.com/Game2/Images/map_sleeping.png",
                         style: { left: "45%", top: "80%", width: "16%", height: "12%" },
-                        objectId: "exit_map_sleeping" //TODO
+                        objectId: "search_the_bed" //TODO
                     },
                     {
                         id: "bed5",
                         //imageUrl: "https://ai.oldwisebear.com/Game2/Images/map_sleeping.png",
                         style: { left: "65%", top: "40%", width: "15%", height: "5%" },
-                        objectId: "exit_map_sleeping" //TODO
+                        objectId: "search_the_bed" //TODO
                     },
                     {
                         id: "bed6",
                         //imageUrl: "https://ai.oldwisebear.com/Game2/Images/map_sleeping.png",
                         style: { left: "72%", top: "60%", width: "20%", height: "5%" },
-                        objectId: "exit_map_sleeping" //TODO
+                        objectId: "search_the_n_bed" 
                     },
                     {
                         id: "bed7",
@@ -256,7 +259,7 @@ const gameScenes = {
                         id: "secret_stash",
                         //imageUrl: "https://ai.oldwisebear.com/Game2/Images/map_stairs.png",
                         style: { left: "10%", top: "65%", width: "25%", height: "15%" },
-                        objectId: "exit_map_stairs" //TODO
+                        objectId: "inspect_secret_stash" 
                     }
                 ]
             },
@@ -291,34 +294,22 @@ const gameScenes = {
                 message: "You are shocked to the view that welcomes you, where did all of the riches go.",
                 hotspots: [
                     {
-                        id: "torture_map", //TODO
-			imageUrl: "https://ai.oldwisebear.com/Game2/Images/map_torture.png",
-                        style: { left: "28%", top: "16%", width: "20%", height: "20%" },
-                        objectId: "exit_map_torture"
+                        id: "exit_real_tresure", 
+			//imageUrl: "https://ai.oldwisebear.com/Game2/Images/map_torture.png",
+                        style: { left: "33%", top: "35%", width: "35%", height: "30%" },
+                        objectId: "exit_real_tresure"
                     },
                     {
-                        id: "stairs_map", //TODO
-                        imageUrl: "https://ai.oldwisebear.com/Game2/Images/map_stairs.png",
-                        style: { left: "37%", top: "59%", width: "20%", height: "20%" },
-                        objectId: "exit_map_stairs"
-                    },
-                    {
-                        id: "treasury_map", //TODO
-                        imageUrl: "https://ai.oldwisebear.com/Game2/Images/map_treasury.png",
-                        style: { left: "65%", top: "35%", width: "20%", height: "20%" },
-                        objectId: "exit_map_treasury"
-                    },
-                    {
-                        id: "sleeping_map", //TODO
-                        imageUrl: "https://ai.oldwisebear.com/Game2/Images/map_sleeping.png",
-                        style: { left: "9%", top: "35%", width: "20%", height: "20%" },
-                        objectId: "exit_map_sleeping"
+                        id: "mana_crystal", 
+                        imageUrl: "https://ai.oldwisebear.com/Game2/Images/crystal.png",
+                        style: { left: "37%", top: "69%", width: "20%", height: "20%" },
+                        objectId: "inspect_crystal"
                     }
                 ]
             },
             "Bad_end": {
                 imageUrl: "https://ai.oldwisebear.com/Game2/Images/END_b.png",
-                message: "Thrown into weird torture device you are left alone till only bones remains.",
+                message: "Thrown into weird torture device you are left alone till only bones remains. You died.",
                 hotspots: [
                     {
                         id: "end",
@@ -340,7 +331,7 @@ const gameScenes = {
             },
             "END": {
                 imageUrl: "https://ai.oldwisebear.com/Game2/Images/END_g.png",
-                message: "...",
+                message: "You rush through the stairs, toward the courtyard only to come back to the apocalyptic view you already started to forgot, the journey continues. \n\nCongratulations! Once again you managed to avoid the cultists.",
                 hotspots: [
                     {
                         id: "end",
@@ -351,7 +342,7 @@ const gameScenes = {
             },
             "SecretEND": {
                 imageUrl: "https://ai.oldwisebear.com/Game2/Images/END_g2.png",
-                message: "...",
+                message: "The wall gives in and you notice stairs beyond, not thinking much you run down. At their end you find a boat, you quickly jump in and swim away. \n\nCongratulations! Once again you managed to avoid the cultists.",
                 hotspots: [
                     {
                         id: "end",
@@ -365,19 +356,38 @@ const gameScenes = {
 
 const combinationRecipes = {
     //example "torch": { "ingredients": ["stick", "cloth", "oil"], "result": { "name": "Torch", "uses": 3 } }
+		"Fishing rod": { "ingredients": ["rod", "Fishing line"], "result": { "name": "Fishing rod", "uses": 99 } },
+		"Weird Mixture": { "ingredients": ["Olive", "Blue liquid", "Red liquid"], "result": { "name": "Weird Mixture" } },
+		"Skull with weird mixture": { "ingredients": ["Weird Mixture", "Skull"], "result": { "name": "Skull with weird mixture" } }
+
 };
 
 const itemDescriptions = {
     // example "Stone": "A rough, grey stone. It has a nice weight to it, good for throwing perhaps?",
     // Add more items as they are introduced to the game
+	"Fishing rod": "A rough old partially fixed fishing rod, however with it maybe you would be able to reach places you were afraid to before?",
+	"Weird Mixture": "You mixed the liquid as you have seen on the poster, however what for are they used, you have no idea",
+	"Skull with weird mixture": "You bathed the skull in the weird mixture, it didn't do a thing on it's own, maybe there is another ingredient missing.",
+	"Talking Skull": "You take the skull out for the moment to look at it and it start screaming, you hide it thinking where could you place it to gather them all in one spot.",
+	"Olive": "A bottle of olive oil, it can makes things slippery or can be added to something.",
+	"Map": "A simple map of the underground, with it you won't get lost even if it's dark.",
 };
 
 const interactiveObjects = {
             "gate_entrance": {
                 lookDescription: "A massive, ancient-looking gate closed with steel bars, that are already rusted",
+		requiredItem: "Olive",
                 handler: () => {
-                    changeScene("Cell_row");
-                    gameState.message = "You exit the cell slowly, hearing some voices in the distance.";
+			if (gameState.flags.OliveUsed) {
+                    		changeScene("Cell_row");
+				gameState.message = "The olive is still there so you squize again. You exit the cell slowly, hearing some voices in the distance.";				
+			} else if (gameState.selectedItemForUse && gameState.selectedItemForUse.name === "Olive") {
+                    		changeScene("Cell_row");
+				gameState.flags.OliveUsed = true;
+                    		gameState.message = "You use olive on the bars and manage to squize through them. You exit the cell slowly, hearing some voices in the distance.";			
+			} else {
+				gameState.message = "You try to force the gate, but its actually quite strudy, however you notice the bars are so wide apart you could almost squize through.";
+			}
                 }
             },
             "cell_row_exit": {
@@ -495,27 +505,31 @@ const interactiveObjects = {
             "talk_to_cultist": {
                 lookDescription: "You have two cultist speaking just barely... under the middle of 3 beds... 3 times...",
                 handler: () => {
-                        // The cultist get more and more annoyed and finally kill the player
-                        gameState.flags.CultistAnnoyance++;
-                        switch (gameState.flags.CultistAnnoyance) {
-                            case 1:
-                                gameState.message = "You try to approach them, however as you soon as you start leaving safety of the boxes they react saying 'Whos there?', which makes you hide again";
-                                break;
-                            default:
-                                gameState.message = "Ahhh, how did you escape? No matter come here...";
-                                // Kick the player out of the close-up view after a short delay.
-                                setTimeout(() => {
-                                    // Check if we are still in the closeup scene before changing it.
-                                    if (gameState.currentScene === 'Cell_row') {
-                                        changeScene("Bad_end2");
-		                        const existingHotspots = gameArea.querySelectorAll('.hotspot');
-		                        existingHotspots.forEach(hs => hs.remove());
-		                        restartButton.style.display = 'inline-block';
-                                        if (combineButton) combineButton.style.display = 'none';
-                                    }
-                                }, 2000); // 2-second delay
-                                break;
-                        }                }
+			if (gameState.selectedItemForUse === "Fishing rod") {
+				gameState.message = "You almost cast you fishing rod, when you realise what a silly idea this is and decide not to.";
+			} else {
+	                        gameState.flags.CultistAnnoyance++;
+        	                switch (gameState.flags.CultistAnnoyance) {
+                	            case 1:
+                        	       gameState.message = "You try to approach them, however as you soon as you start leaving safety of the boxes they react saying 'Whos there?', which makes you hide again";
+ 	                               break;
+ 	                           default:
+	                                gameState.message = "Ahhh, how did you escape? No matter come here...";
+                                	// Kick the player out of the close-up view after a short delay.
+	                                setTimeout(() => {
+        	                            // Check if we are still in the closeup scene before changing it.
+                	                    if (gameState.currentScene === 'Cell_row') {
+                        	                changeScene("Bad_end2");
+		                	        const existingHotspots = gameArea.querySelectorAll('.hotspot');
+		                        	existingHotspots.forEach(hs => hs.remove());
+			                        restartButton.style.display = 'inline-block';
+        	                                if (combineButton) combineButton.style.display = 'none';
+                	                    }
+                        	        }, 2000); // 2-second delay
+                                	break;
+	                        }
+			}
+                }
             },
             "talk_cultis_mob": {
                 lookDescription: "You see a group of cultist, they seem a bit absent minded, however you can here them repeating something, maybe if you got closer",
@@ -549,7 +563,7 @@ const interactiveObjects = {
 		lookDescription: "There is a fishing rod attached to the chain with a small lock on top, if you only had a key.",
                 requiredItem: "Chain_Key",
                 handler: () => {
-                    if (gameState.selectedItemForUse === "Chain_Key") {
+		    if (gameState.selectedItemForUse && gameState.selectedItemForUse.name === "Chain_Key") {
                         gameState.message = "You insert a small key a hear a typical clank sound. After that you are able to take to rod.";
 	                addItemToInventory("Rod");
 			gameState.flags.ChainOpened = true;
@@ -562,7 +576,7 @@ const interactiveObjects = {
                 lookDescription: "A small, glinting metal object on the dusty floor. It looks like a key.",
                 handler: () => {
                         gameState.message = "You pick up the key from the ground. It vanishes after you take it.";
-                        addItemToInventory("Chain_Key");
+                        addItemToInventory({ name: "Chain_Key", uses: 2 });
                         gameState.flags.keyObtained = true;
                         gameState.flags.hotspot_Treasury_room_pick_chain_key_visible = false;
                  }
@@ -576,10 +590,40 @@ const interactiveObjects = {
                                 gameState.message = "You filp and search the bedding, however you find nothing.";
                                 break;
                             case 2:
-                                gameState.message = "You rise the mattress, searching deeper.";
+                                gameState.message = "You rise the mattress, searching deeper, however you find nothing.";
                                 break;
                             default:
                                 gameState.message = "On the third try you decide to look under the bed, finally finding, something that looks like a switch. After pressing it you hear a loud clank, but nothing seems to happen here.";
+                        	gameState.flags.BedPressed = true;
+				break;                               
+                        }
+                }
+            },
+            "search_the_a_bed": {
+                lookDescription: "You see a bed, normal like other around",
+                handler: () => {
+			if (!gameState.flags.GreenLiquid) {			
+                        	addItemToInventory("Green liquid");
+	                        gameState.flags.GreenLiquid = true;				
+				gameState.message = "You filp and search the bedding, however you find only a weird bottle of green liquid.";
+			} else {
+				gameState.message = "You filp and search the bedding, however you find nothing.";
+			}
+                 }
+            },
+            "search_the_n_bed": {
+                lookDescription: "You see a bed, normal like other around",
+                handler: () => {
+                        gameState.flags.Bed2Search++;
+                        switch (gameState.flags.Bed2Search) {
+                            case 1:
+                                gameState.message = "You filp and search the bedding, however you find nothing.";
+                                break;
+                            case 2:
+                                gameState.message = "You rise the mattress, and find a message written in blood, 'Lever at the very end....' ";
+                                break;
+                            default:
+                                gameState.message = "You filp and search the bedding, however you find nothing.";
                         	gameState.flags.BedPressed = true;
 				break;                               
                         }
@@ -589,6 +633,22 @@ const interactiveObjects = {
                 lookDescription: "You see a bed, normal like other around",
                 handler: () => {
                         gameState.message = "You filp and search the bedding, however you find nothing.";
+                 }
+            },
+            "inspect_secret_stash": {
+                lookDescription: "You see a bed, normal like other around, apart from a chest sticking out from under it.",
+                requiredItem: "Chain_Key",
+                handler: () => {
+		    if (gameState.selectedItemForUse && gameState.selectedItemForUse.name === "Chain_Key") {
+                        gameState.message = "You insert a small key a hear a typical clank sound. After that you open the chest and find fishing line and a bottle.";
+	                addItemToInventory("Fishing line");
+	                addItemToInventory("Blue liquid");
+			gameState.flags.chestsearched = true;
+                    } else if (!gameState.flags.chestsearched) {
+                        gameState.message = "The chest and the bed is empty, nothing to search find here.";
+                    } else {
+                        gameState.message = "The chest is closed, a small key is required.";
+		    }
                  }
             },
             "inspect_torch": {
@@ -626,50 +686,190 @@ const interactiveObjects = {
             "inspect_olive": {
                 lookDescription: "Bottle of Olive oil, what's it doing inside a cell?",
                 handler: () => {
-                        addItemToInventory("Olive");
+                        addItemToInventory({ name: "Olive", uses: 2 });
+			gameState.flags.OliveObtained= true;
 			gameState.message = "You examine the bottle and decide to take it with you.";
                  }
             },
-
-
-
-            "enter_house": {
-                lookDescription: "A dilapidated, two-story wooden house. Smoke damage is visible around the windows, and the front door hangs precariously on one hinge.",
+            "inspect_recepie": {
+                lookDescription: "Blue, red and yellow liquids... The yellow could be the Olive, but the rest?",
                 handler: () => {
-                    changeScene("House");
-                    gameState.message = "You enter the house, hoping it won't collapse at you.";
+			gameState.message = "This one shows some kind of recepie, you wonder if you should try it.";
+                 }
+            },
+            "inspect_bucket": {
+		lookDescription: "There is something inside the bucket, but it's too close to the cultist to aproach it.",
+                requiredItem: "Fishing rod",
+                handler: () => {
+		    if (gameState.selectedItemForUse && gameState.selectedItemForUse.name === "Fishing rod") {
+                        gameState.flags.FishingSkills++;
+                        switch (gameState.flags.FishingSkills) {
+                            case 1:
+                                gameState.message = "You try, but completly miss it. Fortunately the cultist didn't notice your terrible try, even though it landed next to their feet.";
+                                break;
+                            case 2:
+                                gameState.message = "You try again, but instead of bucket you cast your fishing rod into the celling";
+                                break;
+                            case 3:
+                                gameState.message = "You try feeling more confident, you cast your fishing rod only to miss again. However, this time you were close, it bumped on the side of the bucket.";
+                                break;
+                            default:
+                        	gameState.message = "You cast your fishing rod and it's a bullseye it goes straight into the bucket and you are able to catch something";
+	                	addItemToInventory("Red liquid");
+				gameState.flags.BucketFished = true;
+                        }
+                    } else if (gameState.flags.BucketFished) {
+                        gameState.message = "You are able to cast the fishing road straight into the bucket again, but this time nothing.";
+                    } else {
+                        gameState.message = "You are too far to inspect the bucket.";
+		    }
                 }
             },
-            "exit_house": {
-                lookDescription: "The doorway leading back out of the house into the city square.",
+            "inspect_skeleton": {
+		lookDescription: "There is someone skeleton, but it's too close to the cultist to search it.",
+                requiredItem: "Fishing rod",
                 handler: () => {
-                    changeScene("City");
-                    gameState.message = "You come back to the city as quietly as possible.";
+		    if (gameState.selectedItemForUse && gameState.selectedItemForUse.name === "Fishing rod") {
+                        gameState.flags.FishingSkills++;
+                        switch (gameState.flags.FishingSkills) {
+                            case 1:
+                                gameState.message = "You try, but completly miss it. Fortunately the cultist didn't notice your terrible try, even though it landed next to their feet.";
+                                break;
+                            case 2:
+                                gameState.message = "You try again, but instead of the skeleton you cast your fishing rod into the celling";
+                                break;
+                            case 3:
+                                gameState.message = "You try feeling more confident, you cast your fishing rod only to miss again. However, this time you were close, it bumped of it's head";
+                                break;
+                            default:
+                        	gameState.message = "You cast your fishing rod and it's a bullseye it goes straight into the eyesocket and with a quick pull you get the skull";
+	                	addItemToInventory("Skull");
+				gameState.flags.SkeletonFished = true;
+                        }
+                    } else if (gameState.flags.SkeletonFished) {
+                        gameState.message = "You are able to cast the fishing road straight into skeleton cell again, but you are unable to pull other parts.";
+                    } else {
+                        gameState.message = "You are too far to search the skeleton.";
+		    }
                 }
             },
-            "gate_exit": {
-                lookDescription: "The main gate leading out of the city, back towards where you started.",
+            "inspect_lever": {
+                lookDescription: "Weird lever, that looks like doesn't belong in here.",
                 handler: () => {
-                    changeScene("Gate");
-                    gameState.message = "You are back in front of the gate.";
+			if ((gameState.flags.Torch2 === true && gameState.flags.Torch1=== false) || (gameState.flags.Torch2 === false && gameState.flags.Torch1 === true)) {
+				gameState.flags.MechanismSolved = true;
+				gameState.message = "The lever budges and the you hear a werid sound, like a water that is slowing slower and slower with each passing second";	
+			} else {
+				gameState.message = "You try to interact with the lever. It won't nudge a milimeter even with all your might.";				
+			}
+                 }
+            },
+            "inspect_crystal": {
+                lookDescription: "Blue crystal, could it that it was somehow keeping this ilussion and everybody from entering the room?",
+                handler: () => {
+			gameState.message = "You try to pick it up, but it's so heavy you are unable to even lift it for 1milimeter, you decide to leave it.";
+                 }
+            },
+            "exit_real_tresure": {
+                lookDescription: "Where did all of the treasure go?",
+                handler: () => {
+                         setTimeout(() => { 	                               
+                                    // Check if we are still in the closeup scene before changing it.
+                                    if (gameState.currentScene === 'Real_Treasury_room') {
+                                        changeScene("Bad_end");
+		                        const existingHotspots = gameArea.querySelectorAll('.hotspot');
+		                        existingHotspots.forEach(hs => hs.remove());
+		                        restartButton.style.display = 'inline-block';
+                                        if (combineButton) combineButton.style.display = 'none';
+                                    }
+			 }, 10000); 
+                        gameState.flags.CultistClosingIn++;
+                        switch (gameState.flags.CultistClosingIn) {
+                            case 1:
+                                gameState.message = "You enter the treasure room, however as soon as you pass the steel bars, a squal can be heard, you hear that cultist are on the move, coming toward you.";
+                                break;
+                            case 2:
+                                gameState.message = "You look frantically around for the way out, you notice that one wall is a bit out of place like it can be pushed.";
+                                break;
+                            case 3:
+                                gameState.message = "You try to push it to no avail, you take a nearby rectangular metal object and try use it as leverage.";
+                                break;
+                            default:
+                                gameState.message = "The wall gives in and you notice stairs beyond, not thinking much you run down";
+	                        const existingHotspots = gameArea.querySelectorAll('.hotspot');
+	                        existingHotspots.forEach(hs => hs.remove());
+	                        restartButton.style.display = 'inline-block';
+                                if (combineButton) combineButton.style.display = 'none';
+				changeScene("SecretEND");
+                                break;
+                        } 
+		}
+            },
+            "activate_torture_device": {
+                lookDescription: "A menacing-looking device. You're not sure you want to know how it works.",
+                requiredItem: "Talking Skull",
+                handler: () => {
+			if (gameState.selectedItemForUse && gameState.selectedItemForUse.name === "Talking Skull") {		
+	                    gameState.flags.tortureSequenceActive = true;
+	                    updateHotspotsForCurrentScene();
+	                    gameState.message = "You place the skull on the device and it starts shouting again. You hear noises from all sides.";
+	                    renderMessage();
+
+ 	                   setTimeout(() => {
+ 	                       if (gameState.flags.playerIsHiding) {
+	                            gameState.flags.tortureSequenceActive = false;
+	                            gameState.flags.tortureSequenceFinished = true;
+	                            gameState.message = "You peek out from the chest. The room is quiet again, you hear all of the cultist are in the prison section.";
+				    gameState.flags.hotspot_stairs_map_exit_end_g_visible = true;
+	                            updateHotspotsForCurrentScene();
+	                            renderMessage();
+	                        } else {
+	                            changeScene("Bad_end");
+	                        }
+	                    }, 5000); // 5-second delay
+			} else {
+				gameState.message = "You try to make any use of this device, but you are unable to.";
+		                    addItemToInventory({ name: "Talking Skull" });
+			}
+	       }
+	    },
+            "inspect_chest": {
+                lookDescription: "A heavy wooden chest, bound with iron. It's open and there is only blood inside.",
+                handler: () => {
+                    if (gameState.flags.tortureSequenceActive) {
+                        gameState.flags.playerIsHiding = true;
+                        gameState.message = "You quickly jump into the chest and close it from inside.";
+                        renderMessage();
+                        return;
+                    } else {
+                        gameState.message = "The chest is empty. It could be a good hiding place, you hide for a moment, but decided it's meanigless at the moment.";
+                    }
                 }
             },
-            "inspect_ring_hole": {
-                lookDescription: "A curious, perfectly circular indentation in the stone wall, about the size of a large coin. It seems tailor-made for something round.",
-                requiredItem: "Ring",
+
+            "inspect_cauldron": {
+		lookDescription: "There bubbling substance in it, you feel like you shouldn't touch it.",
+                requiredItem: "Skull with weird mixture",
+                handler: () => {		
+		    if (gameState.selectedItemForUse && gameState.selectedItemForUse.name === "Skull with weird mixture") {
+                        gameState.message = "You drop the skull with the mixture you prepared, into the cauldron. After few seconds it jumps out on its own and says 'This hurts!', you quickly hide it not to alert the cultists.";
+                        addItemToInventory({ name: "Talking Skull" });
+                    }  else {
+                        gameState.message = "You come near the cauldron and try touching it, however something stops you midway and you decide not to continue.";
+                    }
+                }
+            },
+            "exit_end_g": {
+                lookDescription: "Stairs leading to the courtyard, now it's your chance to leave this place.",
                 handler: () => {
-                    if (gameState.selectedItemForUse === "Ring") {
                         changeScene("END");
-                        gameState.message = "You insert the ring and hear a loud clang. Suddenly the wall slides open in front of you, you go through a long tunnel at which end you see a burning castle. \n\nCongratulations! You've passed the cultist!\n\nThanks for playing!";
                         const existingHotspots = gameArea.querySelectorAll('.hotspot');
                         existingHotspots.forEach(hs => hs.remove());
                         restartButton.style.display = 'inline-block';
                         if (combineButton) combineButton.style.display = 'none';
-                    } else {
-                        gameState.message = "There a werid ring shaped hole in the wall, I wonder where does it go.";
-                    }
                 }
             },
+
             "inspect_rubble": {
                 lookDescription: "A pile of charred wood, stones, and debris at the base of the gate. It looks like something collapsed or was destroyed here.",
                  handler: () => {
@@ -702,32 +902,6 @@ const interactiveObjects = {
 			    changeScene("Storage");
                     } else {
                         gameState.message = "Burning rubble, there might be something hidden in it...";
-                    }
-                }
-            },
-            "inspect_chest": {
-                lookDescription: "A heavy wooden chest, bound with iron. It has a prominent, sturdy lock.",
-                requiredItem: "Chest Key",
-                handler: () => {
-                    if (gameState.flags.tortureSequenceActive) {
-                        gameState.flags.playerIsHiding = true;
-                        gameState.message = "You quickly jump into the chest and close the lid.";
-                        renderMessage();
-                        return;
-                    }
-
-                    if (gameState.selectedItemForUse === "Chest Key") {
-                        gameState.message = "You use the Chest Key and the chest creaks open. You find a shiny ring... whos it might be. As the lock clicks, you hear a faint sound from the trapdoor area in the city."; // Added a bit of narrative flair
-	                addItemToInventory("Ring")
-			gameState.flags.chestOpened = true;
-                    } else if (gameState.flags.chestOpened) {
-                            gameState.message = "The chest is empty.";
-                    } else {
-                        gameState.message = "The chest is closed shut. You need a key.";
-                        if (!gameState.flags.keyObtained) {
-                            // ADD THIS LINE to reveal the chest_key in the Storage scene
-                            gameState.flags.hotspot_Storage_chest_key_visible = true;
-                        }
                     }
                 }
             },
@@ -795,27 +969,6 @@ const interactiveObjects = {
                     } else {
                         gameState.message = "It's too dark to see anything in this corner. If only you had a light source...";
                     }
-                }
-            },
-            "activate_torture_device": {
-                lookDescription: "A menacing-looking device. You're not sure you want to know how it works.",
-                handler: () => {
-                    gameState.flags.tortureSequenceActive = true;
-                    updateHotspotsForCurrentScene();
-                    gameState.message = "You touch the device. A loud grinding noise echoes, and the room goes dark. You have a few seconds to hide!";
-                    renderMessage();
-
-                    setTimeout(() => {
-                        if (gameState.flags.playerIsHiding) {
-                            gameState.flags.tortureSequenceActive = false;
-                            gameState.flags.tortureSequenceFinished = true;
-                            gameState.message = "You peek out from the chest. The room is quiet again, but some things have changed.";
-                            updateHotspotsForCurrentScene();
-                            renderMessage();
-                        } else {
-                            changeScene("Bad_end");
-                        }
-                    }, 5000); // 5-second delay
                 }
             }
             // TODO: Add lookDescription for "pickup_cloth" if it's a distinct hotspot.
